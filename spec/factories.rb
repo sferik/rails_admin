@@ -90,4 +90,12 @@ FactoryBot.define do
             parent: :paper_trail_test,
             class: 'PaperTrailTest::SubclassInNamespace'
   end
+
+  factory :book do
+    sequence(:title) { |n| "Book #{n}" }
+  end
+
+  factory :author do
+    sequence(:name) { |n| "Author #{n}" }
+  end
 end

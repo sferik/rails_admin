@@ -103,6 +103,20 @@ describe 'RailsAdmin Basic Create', type: :request do
     end
   end
 
+  describe 'create with has-and-belongs-to-many association which has customized primary/foreign keys' do
+    before do
+      @authors = FactoryBot.create_list(:author, 3)
+      @field_authors = RailsAdmin.config('Book').create.fields.detect { |f| f.name == :authors }
+      post new_path(model_name: 'book', book: {title: 'Just A Book', @field_authors.method_name => @authors.collect(&@field_authors.associated_primary_key)})
+      @book = RailsAdmin::AbstractModel.new('Book').first
+    end
+
+    it 'creates an object with correct associations' do
+      expect(@book.title).to eq('Just A Book')
+      expect(@book.authors).to eq(@authors)
+    end
+  end
+
   describe 'create with uniqueness constraint violated', given: 'a player exists' do
     before do
       @team = FactoryBot.create :team

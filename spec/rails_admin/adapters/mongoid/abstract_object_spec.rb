@@ -50,6 +50,16 @@ describe 'RailsAdmin::Adapters::Mongoid::AbstractObject', mongoid: true do
         expect(@team.custom_field).to eq(@players.collect(&:id) * ', ')
       end
     end
+
+    describe 'supports assignment of items through <foreign_key>=' do
+      it 'supports foreign_key accessor' do
+        @book = FactoryBot.create :book
+        @authors = FactoryBot.create_list(:author, 3)
+        @book.people = @authors.collect(&:name)
+        expect(@book.people).to eq(@authors.collect(&:name))
+        expect(@book.authors).to eq(@authors)
+      end
+    end
   end
 
   describe 'references_one association' do

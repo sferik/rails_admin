@@ -2,15 +2,12 @@ module RailsAdmin
   module Adapters
     module ActiveRecord
       class Association
-        attr_reader :association, :model
+        attr_reader :association, :model, :name
 
         def initialize(association, model)
           @association = association
           @model = model
-        end
-
-        def name
-          association.name.to_sym
+          @name = association.name.to_sym rescue nil
         end
 
         def pretty_name
@@ -60,6 +57,11 @@ module RailsAdmin
 
         def inverse_of
           options[:inverse_of].try :to_sym
+        end
+
+        def ref_ids_method
+          return unless [:has_many, :has_and_belongs_to_many].include?(type)
+          "#{name.to_s.singularize}_ids".to_sym
         end
 
         def read_only?

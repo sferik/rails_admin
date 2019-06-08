@@ -91,6 +91,10 @@ module RailsAdmin
           association.polymorphic?
         end
 
+        def ref_ids_method
+          association.ref_ids_method
+        end
+
         # Reader for nested attributes
         register_instance_option :nested_form do
           association.nested_options

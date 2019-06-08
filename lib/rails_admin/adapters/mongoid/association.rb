@@ -2,15 +2,12 @@ module RailsAdmin
   module Adapters
     module Mongoid
       class Association
-        attr_reader :association, :model
+        attr_reader :association, :model, :name
 
         def initialize(association, model)
           @association = association
           @model = model
-        end
-
-        def name
-          association.name.to_sym
+          @name = association.name.to_sym rescue nil
         end
 
         def pretty_name
@@ -41,7 +38,7 @@ module RailsAdmin
         end
 
         def primary_key
-          :_id
+          options[:primary_key].try(:to_sym) || :_id
         end
 
         def foreign_key
@@ -74,6 +71,11 @@ module RailsAdmin
 
         def inverse_of
           association.inverse_of.try :to_sym
+        end
+
+        def ref_ids_method
+          return unless [:has_and_belongs_to_many].include?(type)
+          foreign_key
         end
 
         def read_only?
@@ -114,6 +116,7 @@ module RailsAdmin
           association.respond_to?(:cyclic?) ? association.cyclic? : association.cyclic
         end
 
+        delegate :options, :scope, to: :association, prefix: false
         delegate :nested_attributes_options, to: :model, prefix: false
         delegate :polymorphic_parents, to: RailsAdmin::AbstractModel
       end

@@ -108,6 +108,21 @@ describe 'RailsAdmin Basic Update', type: :request do
     end
   end
 
+  describe 'update with has-and-belongs-to-many association which has customized primary/foreign keys' do
+    before do
+      @authors = FactoryBot.create_list(:author, 3)
+      @book = FactoryBot.create :book
+      @field_authors = RailsAdmin.config('Book').create.fields.detect { |f| f.name == :authors }
+      put edit_path(model_name: 'book', id: @book.id, book: {title: 'Just A Book', @field_authors.method_name => @authors.collect(&@field_authors.associated_primary_key)})
+      @book.reload
+    end
+
+    it 'creates an object with correct associations' do
+      expect(@book.title).to eq('Just A Book')
+      expect(@book.authors).to eq(@authors)
+    end
+  end
+
   describe 'update with missing object' do
     before do
       put edit_path(model_name: 'player', id: 1), params: {player: {name: 'Jackie Robinson', number: 42, position: 'Second baseman'}}

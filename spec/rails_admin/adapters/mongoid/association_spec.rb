@@ -58,12 +58,18 @@ describe 'RailsAdmin::Adapters::Mongoid::Association', mongoid: true do
       embedded_in :mongo_user
     end
 
+    class MongoArticle
+      include Mongoid::Document
+      has_and_belongs_to_many :mongo_users, inverse_of: nil, primary_key: 'name', foreign_key: "users"
+    end
+
     @blog     = RailsAdmin::AbstractModel.new MongoBlog
     @post     = RailsAdmin::AbstractModel.new MongoPost
     @category = RailsAdmin::AbstractModel.new MongoCategory
     @user     = RailsAdmin::AbstractModel.new MongoUser
     @profile  = RailsAdmin::AbstractModel.new MongoProfile
     @comment  = RailsAdmin::AbstractModel.new MongoComment
+    @article  = RailsAdmin::AbstractModel.new MongoArticle
   end
 
   after :all do
@@ -140,6 +146,28 @@ describe 'RailsAdmin::Adapters::Mongoid::Association', mongoid: true do
       expect(subject.inverse_of).to be_nil
       expect(subject.read_only?).to be_falsey
       expect(subject.nested_options).to be_nil
+      expect(subject.ref_ids_method).to eq :mongo_category_ids
+    end
+  end
+
+  describe 'has_and_belongs_to_many association with custom primary_key and foreign_key' do
+    subject { @article.associations.detect { |a| a.name == :mongo_users } }
+
+    it 'returns correct values' do
+      expect(subject.pretty_name).to eq 'Mongo users'
+      expect(subject.type).to eq :has_and_belongs_to_many
+      expect(subject.klass).to eq MongoUser
+      expect(subject.primary_key).to eq :name
+      expect(subject.foreign_key).to eq :users
+      expect(subject.foreign_key_nullable?).to be_truthy
+      expect(subject.foreign_type).to be_nil
+      expect(subject.foreign_inverse_of).to be_nil
+      expect(subject.as).to be_nil
+      expect(subject.polymorphic?).to be_falsey
+      expect(subject.inverse_of).to be_nil
+      expect(subject.read_only?).to be_falsey
+      expect(subject.nested_options).to be_nil
+      expect(subject.ref_ids_method).to eq :users
     end
   end
 

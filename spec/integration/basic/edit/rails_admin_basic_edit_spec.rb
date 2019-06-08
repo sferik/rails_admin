@@ -84,6 +84,29 @@ describe 'RailsAdmin Basic Edit', type: :request do
     end
   end
 
+  describe 'edit with has-and-belongs-to-many association which has customized primary/foreign keys' do
+    before do
+      @authors = FactoryBot.create_list(:author, 3)
+      @field_authors = RailsAdmin.config('Book').create.fields.detect { |f| f.name == :authors }
+      @book = FactoryBot.create :book, @field_authors.method_name => @authors.collect(&@field_authors.associated_primary_key)
+      visit edit_path(model_name: 'book', id: @book.id)
+    end
+
+    it 'shows associated objects' do
+      is_expected.to have_selector "#book_#{@field_authors.method_name}" do |select|
+        options = select.all 'option'
+        primary_key = @field_authors.associated_primary_key
+
+        expect(options[0]['selected']).to eq 'selected'
+        expect(options[1]['selected']).to eq 'selected'
+        expect(options[2]['selected']).to eq 'selected'
+        expect(options[0]['value']).to eq @authors[0][primary_key].to_s
+        expect(options[1]['value']).to eq @authors[1][primary_key].to_s
+        expect(options[2]['value']).to eq @authors[2][primary_key].to_s
+      end
+    end
+  end
+
   describe 'edit with missing object' do
     before do
       visit edit_path(model_name: 'player', id: 1)

@@ -50,4 +50,14 @@ describe RailsAdmin::Config::Fields::Association do
       end
     end
   end
+
+  describe 'method_name', mongoid: true do
+    context 'with has_and_belongs_to_many and customized foreign_key' do
+      let(:field) { RailsAdmin.config('Book').fields.detect { |f| f.name == :authors } }
+      it 'has correct method_name' do
+        expect(field.inspect).to include "RailsAdmin::Config::Fields::Types::HasAndBelongsToManyAssociation[authors]"
+        expect(field.method_name).to eq :people
+      end
+    end
+  end
 end
