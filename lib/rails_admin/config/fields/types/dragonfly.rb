@@ -32,6 +32,7 @@ module RailsAdmin
 
           def resource_url(thumb = false)
             return nil unless (v = value)
+
             thumb ? v.thumb(thumb).try(:url) : v.url
           end
         end

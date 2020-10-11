@@ -17,8 +17,8 @@ begin
 rescue LoadError
   desc 'Run RuboCop'
   task :rubocop do
-    $stderr.puts 'Rubocop is disabled'
+    warn 'Rubocop is disabled'
   end
 end
 
-task default: [:spec, :rubocop]
+task default: %i[spec rubocop]

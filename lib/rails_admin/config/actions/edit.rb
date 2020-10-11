@@ -9,7 +9,7 @@ module RailsAdmin
         end
 
         register_instance_option :http_methods do
-          [:get, :put]
+          %i[get put]
         end
 
         register_instance_option :controller do

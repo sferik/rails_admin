@@ -275,7 +275,7 @@ RSpec.describe 'HasManyAssociation field', type: :request do
       end
     end
 
-    it "allows update" do
+    it 'allows update' do
       visit edit_path(model_name: 'managing_user', id: user.id)
       expect(find("select#managing_user_team_ids option[value=\"#{teams[0].id}\"]")).to have_content teams[0].name
       select(teams[1].name, from: 'Teams')
@@ -290,7 +290,7 @@ RSpec.describe 'HasManyAssociation field', type: :request do
         end
       end
 
-      it "allows update", js: true do
+      it 'allows update', js: true do
         visit edit_path(model_name: 'managing_user', id: user.id)
         find('input.ra-multiselect-search').set('T')
         page.execute_script("$('input.ra-multiselect-search').trigger('focus')")

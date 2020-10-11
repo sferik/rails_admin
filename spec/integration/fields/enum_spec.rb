@@ -7,7 +7,7 @@ RSpec.describe 'Enum field', type: :request, active_record: true do
     before do
       Team.class_eval do
         def color_enum
-          %w(blue green red)
+          %w[blue green red]
         end
       end
       RailsAdmin.config Team do
@@ -25,7 +25,7 @@ RSpec.describe 'Enum field', type: :request, active_record: true do
     it 'auto-detects enumeration' do
       is_expected.to have_selector('.enum_type select')
       is_expected.not_to have_selector('.enum_type select[multiple]')
-      expect(all('.enum_type option').map(&:text).select(&:present?)).to eq %w(blue green red)
+      expect(all('.enum_type option').map(&:text).select(&:present?)).to eq %w[blue green red]
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe 'Enum field', type: :request, active_record: true do
     before do
       Team.instance_eval do
         def color_enum
-          %w(blue green red)
+          %w[blue green red]
         end
       end
       RailsAdmin.config Team do
@@ -58,7 +58,7 @@ RSpec.describe 'Enum field', type: :request, active_record: true do
     before do
       Team.class_eval do
         def color_list
-          %w(blue green red)
+          %w[blue green red]
         end
       end
       RailsAdmin.config Team do
@@ -85,7 +85,7 @@ RSpec.describe 'Enum field', type: :request, active_record: true do
     before do
       Team.instance_eval do
         def color_list
-          %w(blue green red)
+          %w[blue green red]
         end
       end
       RailsAdmin.config Team do
@@ -112,7 +112,7 @@ RSpec.describe 'Enum field', type: :request, active_record: true do
     before do
       Team.class_eval do
         def color_list
-          %w(blue green red)
+          %w[blue green red]
         end
       end
       RailsAdmin.config Team do
@@ -120,7 +120,7 @@ RSpec.describe 'Enum field', type: :request, active_record: true do
           field :color, :enum do
             enum_method :color_list
             enum do
-              %w(yellow black)
+              %w[yellow black]
             end
           end
         end
@@ -146,7 +146,7 @@ RSpec.describe 'Enum field', type: :request, active_record: true do
       Team.instance_eval do
         serialize :color
         def color_enum
-          %w(blue green red)
+          %w[blue green red]
         end
       end
       visit new_path(model_name: 'team')
@@ -168,7 +168,7 @@ RSpec.describe 'Enum field', type: :request, active_record: true do
       Team.instance_eval do
         field :color, type: Array
         def color_enum
-          %w(blue green red)
+          %w[blue green red]
         end
       end
       visit new_path(model_name: 'team')

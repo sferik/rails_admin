@@ -52,7 +52,7 @@ RSpec.describe RailsAdmin::Config::Proxyable do
     it 'ensures thread-safety' do
       threads = Array.new(2) do |i|
         Thread.new do
-          value = %w(a b)[i]
+          value = %w[a b][i]
           proxy = proxyable_test.with foo: value
           sleep i * 0.1
           expect(proxy.boo).to eq value

@@ -50,6 +50,7 @@ module RailsAdmin
         if field_names.empty?
           _fields.select { |f| f.instance_eval(&block) }.each do |f|
             next if f.defined
+
             f.defined = true
             f.order = _fields.count(&:defined)
           end

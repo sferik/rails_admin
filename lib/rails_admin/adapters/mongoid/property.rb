@@ -2,7 +2,7 @@ module RailsAdmin
   module Adapters
     module Mongoid
       class Property
-        STRING_TYPE_COLUMN_NAMES = [:name, :title, :subject].freeze
+        STRING_TYPE_COLUMN_NAMES = %i[name title subject].freeze
         attr_reader :property, :model
 
         def initialize(property, model)
@@ -71,7 +71,7 @@ module RailsAdmin
 
         def object_field_type
           association = Association.new model.relations.values.detect { |r| r.try(:foreign_key).try(:to_sym) == name }, model
-          if [:belongs_to, :referenced_in, :embedded_in].include?(association.macro)
+          if %i[belongs_to referenced_in embedded_in].include?(association.macro)
             :bson_object_id
           else
             :string

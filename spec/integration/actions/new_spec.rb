@@ -8,16 +8,16 @@ RSpec.describe 'New action', type: :request do
       visit new_path(model_name: 'player')
     end
 
-    it "shows \"New Model\"" do
+    it 'shows "New Model"' do
       is_expected.to have_content('New Player')
     end
 
-    it "shows required fields as \"Required\"" do
+    it 'shows required fields as "Required"' do
       is_expected.to have_selector('div', text: /Name\s*Required/)
       is_expected.to have_selector('div', text: /Number\s*Required/)
     end
 
-    it "shows non-required fields as \"Optional\"" do
+    it 'shows non-required fields as "Optional"' do
       is_expected.to have_selector('#player_position_field .help-block', text: 'Optional')
       is_expected.to have_selector('#player_born_on_field .help-block', text: 'Optional')
       is_expected.to have_selector('#player_notes_field .help-block', text: 'Optional')

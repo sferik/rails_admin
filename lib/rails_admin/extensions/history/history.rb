@@ -4,9 +4,7 @@ module RailsAdmin
 
     IGNORED_ATTRS = Set[:id, :created_at, :created_on, :deleted_at, :updated_at, :updated_on, :deleted_on]
 
-    if defined?(ActiveModel::MassAssignmentSecurity) && ancestors.include?(ActiveModel::MassAssignmentSecurity)
-      attr_accessible :message, :item, :table, :username
-    end
+    attr_accessible :message, :item, :table, :username if defined?(ActiveModel::MassAssignmentSecurity) && ancestors.include?(ActiveModel::MassAssignmentSecurity)
 
     default_scope { order('id DESC') }
 

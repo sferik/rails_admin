@@ -125,7 +125,7 @@ RSpec.describe RailsAdmin, type: :request do
     it 'is enforced' do
       visit new_path(model_name: 'league')
       fill_in 'league[name]', with: 'National league'
-      find('input[name="authenticity_token"]', visible: false).set("invalid token")
+      find('input[name="authenticity_token"]', visible: false).set('invalid token')
       expect { click_button 'Save' }.to raise_error ActionController::InvalidAuthenticityToken
     end
   end

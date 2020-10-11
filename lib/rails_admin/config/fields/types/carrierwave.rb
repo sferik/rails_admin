@@ -22,6 +22,7 @@ module RailsAdmin
 
           def resource_url(thumb = false)
             return nil unless (uploader = bindings[:object].send(name)).present?
+
             thumb.present? ? uploader.send(thumb).url : uploader.url
           end
         end

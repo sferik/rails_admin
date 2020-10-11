@@ -25,7 +25,7 @@ module RailsAdmin
       attr_accessor :groups
       attr_reader :parent, :root
 
-      NAMED_INSTANCE_VARIABLES = [:@parent, :@root].freeze
+      NAMED_INSTANCE_VARIABLES = %i[@parent @root].freeze
 
       def initialize(entity)
         @parent = nil
@@ -45,6 +45,7 @@ module RailsAdmin
 
       def excluded?
         return @excluded if defined?(@excluded)
+
         @excluded = !RailsAdmin::AbstractModel.all.collect(&:model_name).include?(abstract_model.try(:model_name))
       end
 
@@ -81,7 +82,7 @@ module RailsAdmin
       register_instance_option :parent do
         @parent_model ||= begin
           klass = abstract_model.model.superclass
-          klass = nil if klass.to_s.in?(%w(Object BasicObject ActiveRecord::Base))
+          klass = nil if klass.to_s.in?(%w[Object BasicObject ActiveRecord::Base])
           klass
         end
       end

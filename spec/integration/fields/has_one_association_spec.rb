@@ -122,7 +122,7 @@ RSpec.describe 'HasOneAssociation field', type: :request do
       end
     end
 
-    it "allows update" do
+    it 'allows update' do
       visit edit_path(model_name: 'managing_user', id: user.id)
       select(team.name, from: 'Team')
       click_button 'Save'
@@ -136,7 +136,7 @@ RSpec.describe 'HasOneAssociation field', type: :request do
         end
       end
 
-      it "allows update", js: true do
+      it 'allows update', js: true do
         visit edit_path(model_name: 'managing_user', id: user.id)
         find('input.ra-filtering-select-input').set('T')
         page.execute_script("$('input.ra-filtering-select-input').trigger('focus')")

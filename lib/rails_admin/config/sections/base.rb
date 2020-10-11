@@ -21,7 +21,7 @@ module RailsAdmin
         attr_reader :abstract_model
         attr_reader :parent, :root
 
-        NAMED_INSTANCE_VARIABLES = [:@parent, :@root, :@abstract_model].freeze
+        NAMED_INSTANCE_VARIABLES = %i[@parent @root @abstract_model].freeze
 
         def initialize(parent)
           @parent = parent

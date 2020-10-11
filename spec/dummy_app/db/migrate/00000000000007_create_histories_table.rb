@@ -7,7 +7,7 @@ class CreateHistoriesTable < ActiveRecord::Migration[5.0]
       t.string :table
       t.timestamps null: false
     end
-    add_index(:histories, [:item, :table])
+    add_index(:histories, %i[item table])
   end
 
   def self.down

@@ -1,4 +1,5 @@
 # encoding: UTF-8
+
 require 'csv'
 
 module RailsAdmin
@@ -7,7 +8,7 @@ module RailsAdmin
       @fields = []
       @associations = []
 
-      return self if (@objects = objects).blank?
+      return if (@objects = objects).blank?
 
       @model = objects.dup.first.class
       @abstract_model = RailsAdmin::AbstractModel.new(@model)
@@ -41,13 +42,12 @@ module RailsAdmin
           https://github.com/ruby/csv/issues/62
         MSG
       end
+
       options = HashWithIndifferentAccess.new(options)
       encoding_to = Encoding.find(options[:encoding_to]) if options[:encoding_to].present?
 
       csv_string = generate_csv_string(options)
-      if encoding_to
-        csv_string = csv_string.encode(encoding_to, invalid: :replace, undef: :replace, replace: '?')
-      end
+      csv_string = csv_string.encode(encoding_to, invalid: :replace, undef: :replace, replace: '?') if encoding_to
 
       # Add a BOM for utf8 encodings, helps with utf8 auto-detect for some versions of Excel.
       # Don't add if utf8 but user don't want to touch input encoding:

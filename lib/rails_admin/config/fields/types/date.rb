@@ -12,7 +12,7 @@ module RailsAdmin
           end
 
           register_instance_option :i18n_scope do
-            [:date, :formats]
+            %i[date formats]
           end
 
           register_instance_option :datepicker_options do

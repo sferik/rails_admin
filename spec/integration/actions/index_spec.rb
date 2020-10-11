@@ -6,7 +6,7 @@ RSpec.describe 'Index action', type: :request do
   subject { page }
 
   describe 'page' do
-    it "shows \"List of Models\", should show filters and should show column headers" do
+    it 'shows "List of Models", should show filters and should show column headers' do
       RailsAdmin.config.default_items_per_page = 1
       2.times { FactoryBot.create :player } # two pages of players
       visit index_path(model_name: 'player')
@@ -282,7 +282,7 @@ RSpec.describe 'Index action', type: :request do
 
     it 'displays base filters when no filters are present in the params' do
       RailsAdmin.config Player do
-        list { filters([:name, :team]) }
+        list { filters(%i[name team]) }
       end
       visit index_path(model_name: 'player')
 
@@ -307,7 +307,7 @@ RSpec.describe 'Index action', type: :request do
     end
   end
 
-  describe "fields" do
+  describe 'fields' do
     it 'shows all by default' do
       visit index_path(model_name: 'fan')
       expect(all('th').collect(&:text).delete_if { |t| /^\n*$/ =~ t }).
@@ -633,7 +633,7 @@ RSpec.describe 'Index action', type: :request do
       visit index_path(model_name: 'player')
     end
 
-    it "shows \"2 results\"" do
+    it 'shows "2 results"' do
       is_expected.to have_content('2 players')
     end
   end
@@ -1086,7 +1086,7 @@ RSpec.describe 'Index action', type: :request do
   describe 'sidescroll' do
     all_team_columns = ['', '', 'Id', 'Created at', 'Updated at', 'Division', 'Name', 'Logo url', 'Team Manager', 'Ballpark', 'Mascot', 'Founded', 'Wins', 'Losses', 'Win percentage', 'Revenue', 'Color', 'Custom field', 'Main Sponsor', 'Players', 'Some Fans', 'Comments']
 
-    it "displays all fields on one page when true" do
+    it 'displays all fields on one page when true' do
       RailsAdmin.config do |config|
         config.sidescroll = true
       end
@@ -1098,7 +1098,7 @@ RSpec.describe 'Index action', type: :request do
       expect(page).to have_selector('.ra-sidescroll[data-ra-sidescroll=3]')
     end
 
-    it "displays all fields with custom frozen columns" do
+    it 'displays all fields with custom frozen columns' do
       RailsAdmin.config do |config|
         config.sidescroll = {num_frozen_columns: 2}
       end
@@ -1110,7 +1110,7 @@ RSpec.describe 'Index action', type: :request do
       expect(page).to have_selector('.ra-sidescroll[data-ra-sidescroll=2]')
     end
 
-    it "displays all fields with no checkboxes" do
+    it 'displays all fields with no checkboxes' do
       RailsAdmin.config do |config|
         config.sidescroll = true
       end
@@ -1127,7 +1127,7 @@ RSpec.describe 'Index action', type: :request do
       expect(page).to have_selector('.ra-sidescroll[data-ra-sidescroll=2]')
     end
 
-    it "displays all fields with no frozen columns" do
+    it 'displays all fields with no frozen columns' do
       RailsAdmin.config do |config|
         config.sidescroll = {num_frozen_columns: 0}
       end
@@ -1139,13 +1139,13 @@ RSpec.describe 'Index action', type: :request do
       expect(page).to have_selector('.ra-sidescroll[data-ra-sidescroll=0]')
     end
 
-    it "displays sets when not set" do
+    it 'displays sets when not set' do
       visit index_path(model_name: 'team')
       expect(all('th').collect(&:text)).to eq ['', 'Id', 'Created at', 'Updated at', 'Division', 'Name', 'Logo url', '...', '']
       expect(page).not_to have_selector('.ra-sidescroll')
     end
 
-    it "displays sets when global config is on but model config is off" do
+    it 'displays sets when global config is on but model config is off' do
       RailsAdmin.config do |config|
         config.sidescroll = true
       end
@@ -1159,7 +1159,7 @@ RSpec.describe 'Index action', type: :request do
       expect(page).not_to have_selector('.ra-sidescroll')
     end
 
-    it "displays all fields when global config is off but model config is on" do
+    it 'displays all fields when global config is off but model config is on' do
       RailsAdmin.config Team do
         list do
           sidescroll true
@@ -1173,7 +1173,7 @@ RSpec.describe 'Index action', type: :request do
       expect(page).to have_selector('.ra-sidescroll[data-ra-sidescroll=3]')
     end
 
-    it "displays all fields with custom model config settings" do
+    it 'displays all fields with custom model config settings' do
       RailsAdmin.config do |config|
         config.sidescroll = true
       end
@@ -1193,7 +1193,7 @@ RSpec.describe 'Index action', type: :request do
       expect(page).to have_selector('.ra-sidescroll[data-ra-sidescroll=3]')
     end
 
-    it "displays all fields with model config checkbox settings" do
+    it 'displays all fields with model config checkbox settings' do
       RailsAdmin.config do |config|
         config.sidescroll = true
       end

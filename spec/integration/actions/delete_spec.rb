@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe 'Delete action', type: :request do
   subject { page }
 
-  it "shows \"Delete model\"" do
+  it 'shows "Delete model"' do
     @draft = FactoryBot.create :draft
     @player = @draft.player
     @comment = @player.comments.create
@@ -37,7 +37,7 @@ RSpec.describe 'Delete action', type: :request do
       visit delete_path(model_name: 'player', id: @player.id)
     end
 
-    it "shows \"Delete model\"" do
+    it 'shows "Delete model"' do
       is_expected.to have_content('delete this player')
       is_expected.not_to have_selector("a[href=\"/admin/player/#{@player.id}\"]")
       is_expected.not_to have_selector("a[href=\"/admin/draft/#{@draft.id}\"]")
@@ -52,7 +52,7 @@ RSpec.describe 'Delete action', type: :request do
       visit delete_path(model_name: 'player', id: @player.id)
     end
 
-    it "shows \"Delete model\"" do
+    it 'shows "Delete model"' do
       is_expected.not_to have_content('Routing Error')
       is_expected.to have_content('delete this player')
       is_expected.to have_link(@player.name, href: "/admin/player/#{@player.id}")

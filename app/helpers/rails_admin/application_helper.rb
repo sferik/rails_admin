@@ -35,6 +35,7 @@ module RailsAdmin
       return nil unless _current_user.respond_to?(:email)
       return nil unless abstract_model = RailsAdmin.config(_current_user.class).abstract_model
       return nil unless (edit_action = RailsAdmin::Config::Actions.find(:edit, controller: controller, abstract_model: abstract_model, object: _current_user)).try(:authorized?)
+
       link_to rails_admin.url_for(action: edit_action.action_name, model_name: abstract_model.to_param, id: _current_user.id, controller: 'rails_admin/main') do
         html = []
         html << image_tag("#{(request.ssl? ? 'https://secure' : 'http://www')}.gravatar.com/avatar/#{Digest::MD5.hexdigest _current_user.email}?s=30", alt: '') if RailsAdmin::Config.show_gravatar && _current_user.email.present?
@@ -46,7 +47,11 @@ module RailsAdmin
     def logout_path
       if defined?(Devise)
         scope = Devise::Mapping.find_scope!(_current_user)
-        main_app.send("destroy_#{scope}_session_path") rescue false
+        begin
+          main_app.send("destroy_#{scope}_session_path")
+        rescue StandardError
+          false
+        end
       elsif main_app.respond_to?(:logout_path)
         main_app.logout_path
       end
@@ -54,6 +59,7 @@ module RailsAdmin
 
     def logout_method
       return [Devise.sign_out_via].flatten.first if defined?(Devise)
+
       :delete
     end
 
@@ -87,10 +93,10 @@ module RailsAdmin
     def root_navigation
       actions(:root).select(&:show_in_sidebar).group_by(&:sidebar_label).collect do |label, nodes|
         li_stack = nodes.map do |node|
-          url = rails_admin.url_for(action: node.action_name, controller: "rails_admin/main")
+          url = rails_admin.url_for(action: node.action_name, controller: 'rails_admin/main')
           nav_icon = node.link_icon ? %(<i class="#{node.link_icon}"></i>).html_safe : ''
           content_tag :li do
-            link_to nav_icon + " " + wording_for(:menu, node), url, class: "pjax"
+            link_to nav_icon + ' ' + wording_for(:menu, node), url, class: 'pjax'
           end
         end.join.html_safe
         label ||= t('admin.misc.root_navigation')
@@ -113,7 +119,7 @@ module RailsAdmin
       nodes.collect do |node|
         model_param = node.abstract_model.to_param
         url         = rails_admin.url_for(action: :index, controller: 'rails_admin/main', model_name: model_param)
-        level_class = " nav-level-#{level}" if level > 0
+        level_class = " nav-level-#{level}" if level.positive?
         nav_icon = node.navigation_icon ? %(<i class="#{node.navigation_icon}"></i>).html_safe : ''
         li = content_tag :li, data: {model: model_param} do
           link_to nav_icon + capitalize_first_letter(node.label_plural), url, class: "pjax#{level_class}"
@@ -170,6 +176,7 @@ module RailsAdmin
     def bulk_menu(abstract_model = @abstract_model)
       actions = actions(:bulkable, abstract_model)
       return '' if actions.empty?
+
       content_tag :li, class: 'dropdown', style: 'float:right' do
         content_tag(:a, class: 'dropdown-toggle', data: {toggle: 'dropdown'}, href: '#') { t('admin.misc.bulk_menu_title').html_safe + ' ' + '<b class="caret"></b>'.html_safe } +
           content_tag(:ul, class: 'dropdown-menu', style: 'left:auto; right:0;') do

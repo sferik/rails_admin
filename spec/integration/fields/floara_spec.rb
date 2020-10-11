@@ -25,6 +25,6 @@ RSpec.describe 'Floara field', type: :request do
     end
 
     visit new_path(model_name: 'draft')
-    is_expected.to have_selector("textarea#draft_notes[data-richtext=\"froala-wysiwyg\"][data-options]")
+    is_expected.to have_selector('textarea#draft_notes[data-richtext="froala-wysiwyg"][data-options]')
   end
 end

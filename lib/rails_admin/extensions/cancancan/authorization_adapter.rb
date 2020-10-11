@@ -26,6 +26,7 @@ module RailsAdmin
         # instance if it is available.
         def authorize(action, abstract_model = nil, model_object = nil)
           return unless action
+
           action, subject = resolve_action_and_subject(action, abstract_model, model_object)
           @controller.current_ability.authorize!(action, subject)
         end
@@ -36,6 +37,7 @@ module RailsAdmin
         # return a boolean whereas +authorize+ will raise an exception when not authorized.
         def authorized?(action, abstract_model = nil, model_object = nil)
           return unless action
+
           action, subject = resolve_action_and_subject(action, abstract_model, model_object)
           @controller.current_ability.can?(action, subject)
         end

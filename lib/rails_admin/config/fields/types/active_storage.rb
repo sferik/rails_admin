@@ -16,13 +16,12 @@ module RailsAdmin
           end
 
           register_instance_option :image? do
-            if value
-              value.filename.to_s.split('.').last =~ /jpg|jpeg|png|gif|svg/i
-            end
+            value.filename.to_s.split('.').last =~ /jpg|jpeg|png|gif|svg/i if value
           end
 
           def resource_url(thumb = false)
             return nil unless value
+
             if thumb && value.variable?
               thumb = thumb_method if thumb == true
               variant = value.variant(thumb)

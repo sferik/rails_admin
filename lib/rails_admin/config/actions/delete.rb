@@ -13,7 +13,7 @@ module RailsAdmin
         end
 
         register_instance_option :http_methods do
-          [:get, :delete]
+          %i[get delete]
         end
 
         register_instance_option :authorization_key do

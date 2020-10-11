@@ -15,17 +15,11 @@ module RailsAdmin
 
     EXTENSIONS << extension_key
 
-    if options[:authorization]
-      AUTHORIZATION_ADAPTERS[extension_key] = extension_definition::AuthorizationAdapter
-    end
+    AUTHORIZATION_ADAPTERS[extension_key] = extension_definition::AuthorizationAdapter if options[:authorization]
 
-    if options[:configuration]
-      CONFIGURATION_ADAPTERS[extension_key] = extension_definition::ConfigurationAdapter
-    end
+    CONFIGURATION_ADAPTERS[extension_key] = extension_definition::ConfigurationAdapter if options[:configuration]
 
-    if options[:auditing]
-      AUDITING_ADAPTERS[extension_key] = extension_definition::AuditingAdapter
-    end
+    AUDITING_ADAPTERS[extension_key] = extension_definition::AuditingAdapter if options[:auditing]
   end
 
   # Setup all extensions for testing

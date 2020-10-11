@@ -29,12 +29,14 @@ module RailsAdmin
 
           def parse_value(value)
             return unless value.present?
+
             abstract_model.model.attribute_types[name.to_s].serialize(value)
           end
 
           def parse_input(params)
             value = params[name]
             return unless value
+
             params[name] = parse_input_value(value)
           end
 

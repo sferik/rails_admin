@@ -1,4 +1,4 @@
-appraise "rails-5.0" do
+appraise 'rails-5.0' do
   gem 'rails', '~> 5.0.0'
   gem 'sassc-rails', '~> 2.1'
   gem 'devise', '~> 4.0'
@@ -31,7 +31,7 @@ appraise "rails-5.0" do
   end
 end
 
-appraise "rails-5.1" do
+appraise 'rails-5.1' do
   gem 'rails', '~> 5.1.0'
   gem 'sassc-rails', '~> 2.1'
   gem 'devise', '~> 4.0'
@@ -61,7 +61,7 @@ appraise "rails-5.1" do
   end
 end
 
-appraise "rails-5.2" do
+appraise 'rails-5.2' do
   gem 'rails', '~> 5.2.0'
   gem 'sassc-rails', '~> 2.1'
   gem 'devise', '~> 4.4'
@@ -91,7 +91,7 @@ appraise "rails-5.2" do
   end
 end
 
-appraise "rails-6.0" do
+appraise 'rails-6.0' do
   gem 'rails', '~> 6.0.0'
   gem 'haml'
   gem 'sassc-rails', '~> 2.1'

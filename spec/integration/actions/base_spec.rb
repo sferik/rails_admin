@@ -8,7 +8,7 @@ RSpec.describe 'Base action', type: :request do
       RailsAdmin.config do |config|
         config.actions do
           index do
-            except %w(FieldTest)
+            except %w[FieldTest]
           end
         end
       end
@@ -22,7 +22,7 @@ RSpec.describe 'Base action', type: :request do
             index
             new
             edit do
-              except %w(Player Team)
+              except %w[Player Team]
             end
           end
         end

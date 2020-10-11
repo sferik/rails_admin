@@ -91,6 +91,7 @@ module RailsAdmin
 
     def sanitize_params_for!(action, model_config = @model_config, target_params = params[@abstract_model.param_key])
       return unless target_params.present?
+
       fields = visible_fields(action, model_config)
       allowed_methods = fields.collect(&:allowed_methods).flatten.uniq.collect(&:to_s) << 'id' << '_destroy'
       fields.each { |field| field.parse_input(target_params) }
@@ -116,6 +117,7 @@ module RailsAdmin
 
     def check_for_cancel
       return unless params[:_continue] || (params[:bulk_action] && !params[:bulk_ids])
+
       redirect_to(back_or_index, notice: I18n.t('admin.flash.noaction'))
     end
 
@@ -133,10 +135,11 @@ module RailsAdmin
 
     def get_association_scope_from_params
       return nil unless params[:associated_collection].present?
+
       source_abstract_model = RailsAdmin::AbstractModel.new(to_model_name(params[:source_abstract_model]))
       source_model_config = source_abstract_model.config
       source_object = source_abstract_model.get(params[:source_object_id])
-      action = params[:current_action].in?(%w(create update)) ? params[:current_action] : 'edit'
+      action = params[:current_action].in?(%w[create update]) ? params[:current_action] : 'edit'
       @association = source_model_config.send(action).fields.detect { |f| f.name == params[:associated_collection].to_sym }.with(controller: self, object: source_object)
       @association.associated_collection_scope
     end

@@ -9,16 +9,16 @@ RSpec.describe 'Edit action', type: :request do
       visit edit_path(model_name: 'player', id: @player.id)
     end
 
-    it "shows \"Edit model\"" do
+    it 'shows "Edit model"' do
       is_expected.to have_content('Edit Player')
     end
 
-    it "shows required fields as \"Required\"" do
+    it 'shows required fields as "Required"' do
       is_expected.to have_selector('div', text: /Name\s*Required/)
       is_expected.to have_selector('div', text: /Number\s*Required/)
     end
 
-    it "shows non-required fields as \"Optional\"" do
+    it 'shows non-required fields as "Optional"' do
       expect(find('#player_position_field .help-block')).to have_content('Optional')
       expect(find('#player_born_on_field .help-block')).to have_content('Optional')
       expect(find('#player_notes_field .help-block')).to have_content('Optional')
@@ -289,7 +289,7 @@ RSpec.describe 'Edit action', type: :request do
     end
   end
 
-  describe "fields" do
+  describe 'fields' do
     it 'shows all by default' do
       visit new_path(model_name: 'team')
       is_expected.to have_selector('select#team_division_id')

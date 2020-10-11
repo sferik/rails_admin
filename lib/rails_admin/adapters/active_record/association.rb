@@ -39,6 +39,7 @@ module RailsAdmin
 
         def foreign_key_nullable?
           return true if foreign_key.nil? || type != :has_many
+
           (column = klass.columns_hash[foreign_key.to_s]).nil? || column.null
         end
 

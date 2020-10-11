@@ -7,7 +7,7 @@ module RailsAdmin
       class AuthorizationAdapter
         # This method is called first time only and used for setup
         def self.setup
-          RailsAdmin::Extensions::ControllerExtension.send(:include, ::Pundit)
+          RailsAdmin::Extensions::ControllerExtension.include ::Pundit
         end
 
         # See the +authorize_with+ config method for where the initialization happens.
@@ -22,9 +22,8 @@ module RailsAdmin
         # instance if it is available.
         def authorize(action, abstract_model = nil, model_object = nil)
           record = model_object || abstract_model && abstract_model.model
-          if action && !policy(record).send(action_for_pundit(action))
-            raise ::Pundit::NotAuthorizedError.new("not allowed to #{action} this #{record}")
-          end
+          raise ::Pundit::NotAuthorizedError.new("not allowed to #{action} this #{record}") if action && !policy(record).send(action_for_pundit(action))
+
           @controller.instance_variable_set(:@_pundit_policy_authorized, true)
         end
 

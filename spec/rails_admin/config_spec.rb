@@ -74,9 +74,9 @@ RSpec.describe RailsAdmin::Config do
 
     it 'can be configured' do
       RailsAdmin.config do |config|
-        config.main_app_name = %w(stati c value)
+        config.main_app_name = %w[stati c value]
       end
-      expect(RailsAdmin.config.main_app_name).to eq(%w(stati c value))
+      expect(RailsAdmin.config.main_app_name).to eq(%w[stati c value])
     end
   end
 
@@ -303,7 +303,7 @@ RSpec.describe RailsAdmin::Config do
         end
       end
       it 'execute all passed blocks' do
-        expect(fields.map(&:name)).to match_array %i(players fans)
+        expect(fields.map(&:name)).to match_array %i[players fans]
       end
     end
     context 'when expand redefine behavior' do
@@ -328,7 +328,7 @@ RSpec.describe RailsAdmin::Config do
     end
   end
 
-  describe "field types code reloading" do
+  describe 'field types code reloading' do
     before { Rails.application.config.cache_classes = false }
     after { Rails.application.config.cache_classes = true }
 
@@ -354,7 +354,7 @@ RSpec.describe RailsAdmin::Config do
       end
     end
 
-    it "allows code reloading" do
+    it 'allows code reloading' do
       Team.send(:rails_admin, &team_config)
 
       # This simulates the way RailsAdmin really does it
@@ -372,23 +372,25 @@ RSpec.describe RailsAdmin::Config do
         end
       end
       Team.send(:rails_admin, &team_config2)
-      expect(fields.map(&:name)).to match_array %i(id wins)
+      expect(fields.map(&:name)).to match_array %i[id wins]
     end
 
-    it "updates model config when reloading code for rails 5" do
-      Team.send(:rails_admin, &team_config)
+    if defined?(ActiveSupport::Reloader)
+      it 'updates model config when reloading code for rails 5' do
+        Team.send(:rails_admin, &team_config)
 
-      # this simulates rails code reloading
-      RailsAdmin::Engine.initializers.select do |i|
-        i.name == "RailsAdmin reload config in development"
-      end.first.block.call
-      Rails.application.executor.wrap do
-        ActiveSupport::Reloader.new.tap(&:class_unload!).complete!
+        # this simulates rails code reloading
+        RailsAdmin::Engine.initializers.select do |i|
+          i.name == 'RailsAdmin reload config in development'
+        end.first.block.call
+        Rails.application.executor.wrap do
+          ActiveSupport::Reloader.new.tap(&:class_unload!).complete!
+        end
+
+        Team.send(:rails_admin, &team_config3)
+        expect(fields.map(&:name)).to match_array %i[wins]
       end
-
-      Team.send(:rails_admin, &team_config3)
-      expect(fields.map(&:name)).to match_array %i(wins)
-    end if defined?(ActiveSupport::Reloader)
+    end
   end
 end
 

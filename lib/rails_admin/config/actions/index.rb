@@ -11,7 +11,7 @@ module RailsAdmin
         end
 
         register_instance_option :http_methods do
-          [:get, :post]
+          %i[get post]
         end
 
         register_instance_option :route_fragment do
@@ -33,9 +33,7 @@ module RailsAdmin
 
             unless @model_config.list.scopes.empty?
               if params[:scope].blank?
-                unless @model_config.list.scopes.first.nil?
-                  @objects = @objects.send(@model_config.list.scopes.first)
-                end
+                @objects = @objects.send(@model_config.list.scopes.first) unless @model_config.list.scopes.first.nil?
               elsif @model_config.list.scopes.collect(&:to_s).include?(params[:scope])
                 @objects = @objects.send(params[:scope].to_sym)
               end

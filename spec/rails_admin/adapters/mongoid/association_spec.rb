@@ -71,11 +71,11 @@ RSpec.describe 'RailsAdmin::Adapters::Mongoid::Association', mongoid: true do
   end
 
   it 'lists associations' do
-    expect(@post.associations.collect { |a| a.name.to_sym }).to match_array [:mongo_blog, :mongo_categories, :mongo_comments, :mongo_note]
+    expect(@post.associations.collect { |a| a.name.to_sym }).to match_array %i[mongo_blog mongo_categories mongo_comments mongo_note]
   end
 
   it 'reads correct and know types in [:belongs_to, :has_and_belongs_to_many, :has_many, :has_one]' do
-    expect((@post.associations + @blog.associations + @user.associations).collect { |a| a.type.to_s }.uniq).to match_array %w(belongs_to has_and_belongs_to_many has_many has_one)
+    expect((@post.associations + @blog.associations + @user.associations).collect { |a| a.type.to_s }.uniq).to match_array %w[belongs_to has_and_belongs_to_many has_many has_one]
   end
 
   describe 'belongs_to association' do
@@ -144,7 +144,7 @@ RSpec.describe 'RailsAdmin::Adapters::Mongoid::Association', mongoid: true do
   end
 
   describe 'polymorphic belongs_to association' do
-    before { allow(RailsAdmin::Config).to receive(:models_pool).and_return(%w(MongoBlog MongoPost MongoCategory MongoUser MongoProfile MongoComment)) }
+    before { allow(RailsAdmin::Config).to receive(:models_pool).and_return(%w[MongoBlog MongoPost MongoCategory MongoUser MongoProfile MongoComment]) }
     subject { @comment.associations.detect { |a| a.name == :commentable } }
 
     it 'returns correct values' do
@@ -165,7 +165,7 @@ RSpec.describe 'RailsAdmin::Adapters::Mongoid::Association', mongoid: true do
   end
 
   describe 'polymorphic inverse has_many association' do
-    before { allow(RailsAdmin::Config).to receive(:models_pool).and_return(%w(MongoBlog MongoPost MongoCategory MongoUser MongoProfile MongoComment)) }
+    before { allow(RailsAdmin::Config).to receive(:models_pool).and_return(%w[MongoBlog MongoPost MongoCategory MongoUser MongoProfile MongoComment]) }
     subject { @blog.associations.detect { |a| a.name == :mongo_comments } }
 
     it 'returns correct values' do

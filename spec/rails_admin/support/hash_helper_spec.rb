@@ -21,13 +21,13 @@ RSpec.describe RailsAdmin::HashHelper do
     let(:symbolized_hash) { RailsAdmin::HashHelper.symbolize(hash) }
 
     it 'symbolizes top-level hash keys' do
-      [:subject, :user].each do |key|
+      %i[subject user].each do |key|
         expect(symbolized_hash.keys).to include(key)
       end
     end
 
     it 'symbolizes nested hashes' do
-      [:name, :title, :clients].each do |key|
+      %i[name title clients].each do |key|
         expect(symbolized_hash[:user].keys).to include(key)
       end
     end

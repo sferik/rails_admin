@@ -6,7 +6,7 @@ require 'rails_admin/adapters/active_record/property'
 module RailsAdmin
   module Adapters
     module ActiveRecord
-      DISABLED_COLUMN_TYPES = [:tsvector, :blob, :binary, :spatial, :hstore, :geometry].freeze
+      DISABLED_COLUMN_TYPES = %i[tsvector blob binary spatial hstore geometry].freeze
 
       def new(params = {})
         AbstractObject.new(model.new(params))
@@ -14,6 +14,7 @@ module RailsAdmin
 
       def get(id)
         return unless object = model.where(primary_key => id).first
+
         AbstractObject.new object
       end
 
@@ -32,9 +33,7 @@ module RailsAdmin
         scope = scope.where(primary_key => options[:bulk_ids]) if options[:bulk_ids]
         scope = query_scope(scope, options[:query]) if options[:query]
         scope = filter_scope(scope, options[:filters]) if options[:filters]
-        if options[:page] && options[:per]
-          scope = scope.send(Kaminari.config.page_method_name, options[:page]).per(options[:per])
-        end
+        scope = scope.send(Kaminari.config.page_method_name, options[:page]).per(options[:per]) if options[:page] && options[:per]
         scope = scope.reorder("#{options[:sort]} #{options[:sort_reverse] ? 'asc' : 'desc'}") if options[:sort]
         scope
       end
@@ -77,7 +76,7 @@ module RailsAdmin
         when 'mysql2'
           ::ActiveRecord::Base.connection.raw_connection.encoding
         when 'oracle_enhanced'
-          ::ActiveRecord::Base.connection.select_one("SELECT dummy FROM DUAL").values.first.encoding
+          ::ActiveRecord::Base.connection.select_one('SELECT dummy FROM DUAL').values.first.encoding
         else
           ::ActiveRecord::Base.connection.select_one("SELECT '' AS str;").values.first.encoding
         end
@@ -220,8 +219,8 @@ module RailsAdmin
         end
 
         def build_statement_for_boolean
-          return ["(#{@column} IS NULL OR #{@column} = ?)", false] if %w(false f 0).include?(@value)
-          return ["(#{@column} = ?)", true] if %w(true t 1).include?(@value)
+          return ["(#{@column} IS NULL OR #{@column} = ?)", false] if %w[false f 0].include?(@value)
+          return ["(#{@column} = ?)", true] if %w[true t 1].include?(@value)
         end
 
         def column_for_value(value)
@@ -230,6 +229,7 @@ module RailsAdmin
 
         def build_statement_for_belongs_to_association
           return if @value.blank?
+
           ["(#{@column} = ?)", @value.to_i] if @value.to_i.to_s == @value
         end
 
@@ -238,9 +238,7 @@ module RailsAdmin
 
           return ["(#{@column} = ?)", @value] if ['is', '='].include?(@operator)
 
-          unless ['postgresql', 'postgis'].include? ar_adapter
-            @value = @value.mb_chars.downcase
-          end
+          @value = @value.mb_chars.downcase unless %w[postgresql postgis].include? ar_adapter
 
           @value = begin
             case @operator
@@ -255,7 +253,7 @@ module RailsAdmin
             end
           end
 
-          if ['postgresql', 'postgis'].include? ar_adapter
+          if %w[postgresql postgis].include? ar_adapter
             ["(#{@column} ILIKE ?)", @value]
           else
             ["(LOWER(#{@column}) LIKE ?)", @value]
@@ -264,13 +262,12 @@ module RailsAdmin
 
         def build_statement_for_enum
           return if @value.blank?
+
           ["(#{@column} IN (?))", Array.wrap(@value)]
         end
 
         def build_statement_for_uuid
-          if @value.to_s =~ /\A[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}\z/
-            column_for_value(@value)
-          end
+          column_for_value(@value) if @value.to_s =~ /\A[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}\z/
         end
 
         def ar_adapter

@@ -18,7 +18,7 @@ RSpec.describe 'ActiveRecordEnum field', type: :request, active_record: true do
       visit new_path(model_name: 'field_test')
       is_expected.to have_selector('.enum_type select')
       is_expected.not_to have_selector('.enum_type select[multiple]')
-      expect(all('.enum_type option').map(&:text).select(&:present?)).to eq %w(S M L)
+      expect(all('.enum_type option').map(&:text).select(&:present?)).to eq %w[S M L]
     end
 
     it 'shows current value as selected' do
@@ -54,24 +54,24 @@ RSpec.describe 'ActiveRecordEnum field', type: :request, active_record: true do
       visit new_path(model_name: 'field_test')
       is_expected.to have_selector('.enum_type select')
       is_expected.not_to have_selector('.enum_type select[multiple]')
-      expect(all('.enum_type option').map(&:text).select(&:present?)).to eq %w(small medium large)
+      expect(all('.enum_type option').map(&:text).select(&:present?)).to eq %w[small medium large]
     end
 
     it 'shows current value as selected' do
       visit edit_path(model_name: 'field_test', id: FieldTest.create(integer_enum_field: :large))
-      expect(find('.enum_type select').value).to eq "2"
+      expect(find('.enum_type select').value).to eq '2'
     end
 
     it 'can be updated' do
       visit edit_path(model_name: 'field_test', id: FieldTest.create(integer_enum_field: :small))
       select 'large'
       click_button 'Save'
-      expect(FieldTest.first.integer_enum_field).to eq "large"
+      expect(FieldTest.first.integer_enum_field).to eq 'large'
     end
 
     it 'pre-populates default value' do
       visit new_path(model_name: 'field_test')
-      expect(find('.enum_type select').value).to eq "1"
+      expect(find('.enum_type select').value).to eq '1'
     end
   end
 end

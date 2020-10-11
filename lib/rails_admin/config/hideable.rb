@@ -16,7 +16,7 @@ module RailsAdmin
 
       # Writer to hide object.
       def hide(&block)
-        visible block ? proc { false == instance_eval(&block) } : false
+        visible block ? proc { instance_eval(&block) == false } : false
       end
 
       # Writer to show field.

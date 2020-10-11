@@ -198,11 +198,9 @@ module RailsAdmin
       end
 
       def default_search_operator=(operator)
-        if %w(default like starts_with ends_with is =).include? operator
-          @default_search_operator = operator
-        else
-          raise(ArgumentError.new("Search operator '#{operator}' not supported"))
-        end
+        raise(ArgumentError.new("Search operator '#{operator}' not supported")) unless %w[default like starts_with ends_with is =].include? operator
+
+        @default_search_operator = operator
       end
 
       # pool of all found model names from the whole application
@@ -274,8 +272,8 @@ module RailsAdmin
         @current_user = nil
         @default_hidden_fields = {}
         @default_hidden_fields[:base] = [:_type]
-        @default_hidden_fields[:edit] = [:id, :_id, :created_at, :created_on, :deleted_at, :updated_at, :updated_on, :deleted_on]
-        @default_hidden_fields[:show] = [:id, :_id, :created_at, :created_on, :deleted_at, :updated_at, :updated_on, :deleted_on]
+        @default_hidden_fields[:edit] = %i[id _id created_at created_on deleted_at updated_at updated_on deleted_on]
+        @default_hidden_fields[:show] = %i[id _id created_at created_on deleted_at updated_at updated_on deleted_on]
         @default_items_per_page = 20
         @default_associated_collection_limit = 100
         @default_search_operator = 'default'
@@ -283,7 +281,7 @@ module RailsAdmin
         @included_models = []
         @total_columns_width = 697
         @sidescroll = nil
-        @label_methods = [:name, :title]
+        @label_methods = %i[name title]
         @main_app_name = proc { [Rails.application.engine_name.titleize.chomp(' Application'), 'Admin'] }
         @registry = {}
         @show_gravatar = true
@@ -316,7 +314,7 @@ module RailsAdmin
 
       def visible_models(bindings)
         visible_models_with_bindings(bindings).sort do |a, b|
-          if (weight_order = a.weight <=> b.weight) == 0
+          if (weight_order = a.weight <=> b.weight).zero?
             a.label.downcase <=> b.label.downcase
           else
             weight_order

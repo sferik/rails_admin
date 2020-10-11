@@ -18,9 +18,9 @@ module RailsAdmin
         attr_accessor :defined, :order, :section
         attr_reader :parent, :root
 
-        NAMED_INSTANCE_VARIABLES = [
-          :@parent, :@root, :@section, :@children_fields_registered,
-          :@associated_model_config, :@group
+        NAMED_INSTANCE_VARIABLES = %i[
+          @parent @root @section @children_fields_registered
+          @associated_model_config @group
         ].freeze
 
         def initialize(parent, name, properties)
@@ -36,7 +36,7 @@ module RailsAdmin
         end
 
         register_instance_option :css_class do
-          "#{self.name}_field"
+          "#{name}_field"
         end
 
         def type_css_class
@@ -182,7 +182,7 @@ module RailsAdmin
           (@required ||= {})[context] ||= !!([name] + children_fields).uniq.detect do |column_name|
             abstract_model.model.validators_on(column_name).detect do |v|
               !(v.options[:allow_nil] || v.options[:allow_blank]) &&
-                [:presence, :numericality, :attachment_presence].include?(v.kind) &&
+                %i[presence numericality attachment_presence].include?(v.kind) &&
                 (v.options[:on] == context || v.options[:on].blank?) &&
                 (v.options[:if].blank? && v.options[:unless].blank?)
             end
@@ -213,6 +213,7 @@ module RailsAdmin
           returned = true
           (RailsAdmin.config.default_hidden_fields || {}).each do |section, fields|
             next unless self.section.is_a?("RailsAdmin::Config::Sections::#{section.to_s.camelize}".constantize)
+
             returned = false if fields.include?(name)
           end
           returned
@@ -255,7 +256,7 @@ module RailsAdmin
         # @see RailsAdmin::Config::Fields::Base.register_instance_option :required?
         def optional(state = nil, &block)
           if !state.nil? || block
-            required state.nil? ? proc { false == instance_eval(&block) } : false == state
+            required state.nil? ? proc { instance_eval(&block) == false } : state == false
           else
             optional?
           end

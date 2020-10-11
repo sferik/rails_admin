@@ -22,6 +22,7 @@ module RailsAdmin
 
             def resource_url(thumb = false)
               return nil unless value
+
               thumb.present? ? value.send(thumb).url : value.url
             end
           end

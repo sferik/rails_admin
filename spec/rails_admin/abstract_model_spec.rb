@@ -35,13 +35,13 @@ RSpec.describe RailsAdmin::AbstractModel do
     end
 
     context 'on ActiveRecord native enum', active_record: true do
-      shared_examples "filter on enum" do
+      shared_examples 'filter on enum' do
         before do
-          ["S", "M", "L"].each do |size|
+          %w[S M L].each do |size|
             FactoryBot.create(:field_test, string_enum_field: size)
           end
 
-          ["small", "medium", "large"].each do |size|
+          %w[small medium large].each do |size|
             FactoryBot.create(:field_test, integer_enum_field: size)
           end
         end
@@ -55,19 +55,19 @@ RSpec.describe RailsAdmin::AbstractModel do
         end
       end
 
-      context "when enum is integer enum" do
-        it_behaves_like "filter on enum" do
+      context 'when enum is integer enum' do
+        it_behaves_like 'filter on enum' do
           let(:filter_value) { 0 }
-          let(:enum_field) { "integer_enum_field" }
+          let(:enum_field) { 'integer_enum_field' }
           let(:enum_label) { 'small' }
           let(:expected_elements_count) { 1 }
         end
       end
 
-      context "when enum is string enum where label <> value" do
-        it_behaves_like "filter on enum" do
+      context 'when enum is string enum where label <> value' do
+        it_behaves_like 'filter on enum' do
           let(:filter_value) { 's' }
-          let(:enum_field) { "string_enum_field" }
+          let(:enum_field) { 'string_enum_field' }
           let(:enum_label) { 'S' }
           let(:expected_elements_count) { 1 }
         end

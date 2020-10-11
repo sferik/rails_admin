@@ -142,11 +142,11 @@ RSpec.describe 'Show action', type: :request do
 
       is_expected.not_to have_selector('h4', text: 'Basic info')
 
-      %w(
+      %w[
         division name logo_url manager
         ballpark mascot founded wins
         losses win_percentage revenue
-      ).each do |field|
+      ].each do |field|
         is_expected.not_to have_selector(".#{field}_field")
       end
     end
@@ -231,7 +231,7 @@ RSpec.describe 'Show action', type: :request do
     end
   end
 
-  describe "fields" do
+  describe 'fields' do
     before do
       RailsAdmin.config do |c|
         c.compact_show_view = false
@@ -241,11 +241,11 @@ RSpec.describe 'Show action', type: :request do
     it 'shows all by default' do
       visit show_path(model_name: 'team', id: team.id)
 
-      %w(
+      %w[
         division name logo_url manager
         ballpark mascot founded wins
         losses win_percentage revenue players fans
-      ).each do |field|
+      ].each do |field|
         is_expected.to have_selector(".#{field}_field")
       end
     end
@@ -366,11 +366,11 @@ RSpec.describe 'Show action', type: :request do
 
       visit show_path(model_name: 'team', id: team.id)
 
-      %w(Name Logo\ url Manager Ballpark Mascot).each do |text|
+      %w[Name Logo\ url Manager Ballpark Mascot].each do |text|
         is_expected.not_to have_selector('.label', text: text)
       end
 
-      %w(Division Founded Wins Losses Win\ percentage Revenue Players Fans).each do |text|
+      %w[Division Founded Wins Losses Win\ percentage Revenue Players Fans].each do |text|
         is_expected.to have_selector('.label', text: text)
       end
     end
@@ -386,11 +386,11 @@ RSpec.describe 'Show action', type: :request do
 
       visit show_path(model_name: 'team', id: team.id)
 
-      %w(Name Logo\ url Manager Ballpark Mascot).each do |text|
+      %w[Name Logo\ url Manager Ballpark Mascot].each do |text|
         is_expected.not_to have_selector('.label', text: text)
       end
 
-      %w(Division Founded Wins Losses Win\ percentage Revenue Players Fans).each do |text|
+      %w[Division Founded Wins Losses Win\ percentage Revenue Players Fans].each do |text|
         is_expected.to have_selector('.label', text: text)
       end
     end

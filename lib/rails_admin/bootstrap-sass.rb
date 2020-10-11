@@ -13,16 +13,15 @@ module RailsAdmin
 
       require 'sassc-rails' if rails?
 
-      unless rails? || compass?
-        raise(Bootstrap::FrameworkNotFound.new('bootstrap-sass requires either Rails > 3.1 or Compass, neither of which are loaded'))
-      end
+      raise(Bootstrap::FrameworkNotFound.new('bootstrap-sass requires either Rails > 3.1 or Compass, neither of which are loaded')) unless rails? || compass?
 
-      if defined?(::Sass) && ::Sass.respond_to?(:load_paths)
-        stylesheets = File.expand_path(File.join('..', 'vendor', 'assets', 'stylesheets'))
-        fonts = File.expand_path(File.join('..', 'vendor', 'assets', 'fonts'))
-        ::Sass.load_paths << stylesheets
-        ::Sass.load_paths << fonts
-      end
+      return unless defined?(::Sass)
+      return unless ::Sass.respond_to?(:load_paths)
+
+      stylesheets = File.expand_path(File.join('..', 'vendor', 'assets', 'stylesheets'))
+      fonts = File.expand_path(File.join('..', 'vendor', 'assets', 'fonts'))
+      ::Sass.load_paths << stylesheets
+      ::Sass.load_paths << fonts
     end
 
     def self.asset_pipeline?

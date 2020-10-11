@@ -9,7 +9,7 @@ module RailsAdmin
         end
 
         register_instance_option :http_methods do
-          [:post, :delete]
+          %i[post delete]
         end
 
         register_instance_option :controller do

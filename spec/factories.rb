@@ -71,7 +71,7 @@ FactoryBot.define do
   end
 
   factory :ball do
-    color { %w(red blue green yellow purple brown black white).sample }
+    color { %w[red blue green yellow purple brown black white].sample }
   end
 
   factory :hardball do

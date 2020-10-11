@@ -52,15 +52,16 @@ module RailsAdmin
           global_config = RailsAdmin::Config.sidescroll
           model_config = sidescroll
           enabled = model_config.nil? ? global_config : model_config
-          if enabled
-            num_frozen = model_config[:num_frozen_columns] if model_config.is_a?(Hash)
-            unless num_frozen
-              num_frozen = global_config[:num_frozen_columns] if global_config.is_a?(Hash)
-              num_frozen ||= 3 # by default, freeze checkboxes, links & first property (usually primary key / id?)
-              num_frozen -= 1 unless checkboxes? # model config should be explicit about this, only adjust if using global config
-            end
-            num_frozen
+
+          return unless enabled
+
+          num_frozen = model_config[:num_frozen_columns] if model_config.is_a?(Hash)
+          unless num_frozen
+            num_frozen = global_config[:num_frozen_columns] if global_config.is_a?(Hash)
+            num_frozen ||= 3 # by default, freeze checkboxes, links & first property (usually primary key / id?)
+            num_frozen -= 1 unless checkboxes? # model config should be explicit about this, only adjust if using global config
           end
+          num_frozen
         end
       end
     end

@@ -9,7 +9,7 @@ module RailsAdmin
           RailsAdmin::Config::Fields::Types.register(self)
 
           @format = :long
-          @i18n_scope = [:time, :formats]
+          @i18n_scope = %i[time formats]
           @js_plugin_options = {}
         end
       end

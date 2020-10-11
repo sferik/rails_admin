@@ -1,5 +1,6 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'rails_admin/version'
 
@@ -21,10 +22,10 @@ Gem::Specification.new do |spec|
   spec.description = 'RailsAdmin is a Rails engine that provides an easy-to-use interface for managing your data.'
   spec.email = ['sferik@gmail.com', 'bogdan@cadmio.org', 'petteri.kaapa@gmail.com']
   spec.files = Dir['Gemfile', 'LICENSE.md', 'README.md', 'Rakefile', 'app/**/*', 'config/**/*', 'lib/**/*', 'public/**/*', 'vendor/**/*']
-  spec.licenses = %w(MIT)
+  spec.licenses = %w[MIT]
   spec.homepage = 'https://github.com/sferik/rails_admin'
   spec.name = 'rails_admin'
-  spec.require_paths = %w(lib)
+  spec.require_paths = %w[lib]
   spec.required_ruby_version     = '>= 2.2.2'
   spec.required_rubygems_version = '>= 1.8.11'
   spec.summary = 'Admin for Rails'

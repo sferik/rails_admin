@@ -9,7 +9,11 @@ module RailsAdmin
         end
 
         register_instance_option :visible? do
-          authorized? && (bindings[:controller].main_app.url_for(bindings[:object]) rescue false)
+          authorized? && (begin
+                            bindings[:controller].main_app.url_for(bindings[:object])
+                          rescue StandardError
+                            false
+                          end)
         end
 
         register_instance_option :controller do

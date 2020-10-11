@@ -15,12 +15,12 @@ module RailsAdmin
         class << self
           def parse_object_id(value)
             OBJECT_ID.from_string(value)
-          rescue => e
-            raise e if %w(
+          rescue StandardError => e
+            raise e if %w[
               Moped::Errors::InvalidObjectId
               BSON::ObjectId::Invalid
               BSON::InvalidObjectId
-            ).exclude?(e.class.to_s)
+            ].exclude?(e.class.to_s)
           end
         end
       end

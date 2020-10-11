@@ -17,13 +17,12 @@ module RailsAdmin
             end
 
             register_instance_option :image? do
-              if value
-                value.filename.to_s.split('.').last =~ /jpg|jpeg|png|gif|svg/i
-              end
+              value.filename.to_s.split('.').last =~ /jpg|jpeg|png|gif|svg/i if value
             end
 
             def resource_url(thumb = false)
               return nil unless value
+
               if thumb && value.variable?
                 variant = value.variant(thumb_method)
                 Rails.application.routes.url_helpers.rails_blob_representation_path(

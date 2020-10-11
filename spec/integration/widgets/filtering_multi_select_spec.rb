@@ -25,7 +25,7 @@ RSpec.describe 'FilteringMultiSelect widget', type: :request, js: true do
         end
       end
 
-      it "does not pick the placeholder for selection" do
+      it 'does not pick the placeholder for selection' do
         visit edit_path(model_name: 'team', id: team.id)
         click_link 'Choose all'
         expect(page).not_to have_css('#team_player_ids option', visible: false)

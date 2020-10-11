@@ -43,12 +43,10 @@ module RailsAdmin
       SafeYAML.load(yaml)
     end
   rescue LoadError
-    if YAML.respond_to?(:safe_load)
-      def self.yaml_load(yaml)
-        YAML.safe_load(yaml)
-      end
-    else
-      raise LoadError.new "Safe-loading of YAML is not available. Please install 'safe_yaml' or install Psych 2.0+"
+    raise LoadError.new "Safe-loading of YAML is not available. Please install 'safe_yaml' or install Psych 2.0+" unless YAML.respond_to?(:safe_load)
+
+    def self.yaml_load(yaml) # rubocop:disable Lint/DuplicateMethods
+      YAML.safe_load(yaml)
     end
   end
 

@@ -19,5 +19,5 @@ class FakeIO
   end
 
   extend Forwardable
-  delegate %i(read rewind eof? close size) => :@io
+  delegate %i[read rewind eof? close size] => :@io
 end

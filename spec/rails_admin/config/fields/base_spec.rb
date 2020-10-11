@@ -122,7 +122,7 @@ RSpec.describe RailsAdmin::Config::Fields::Base do
   end
 
   describe '#children_fields' do
-    POLYMORPHIC_CHILDREN = [:commentable_id, :commentable_type].freeze
+    POLYMORPHIC_CHILDREN = %i[commentable_id commentable_type].freeze
 
     it 'is empty by default' do
       expect(RailsAdmin.config(Team).fields.detect { |f| f.name == :name }.children_fields).to eq([])
@@ -159,7 +159,7 @@ RSpec.describe RailsAdmin::Config::Fields::Base do
 
     context 'of a Dragonfly installation' do
       it 'is a _name field and _uid field' do
-        expect(RailsAdmin.config(FieldTest).fields.detect { |f| f.name == :dragonfly_asset }.children_fields).to eq([:dragonfly_asset_name, :dragonfly_asset_uid])
+        expect(RailsAdmin.config(FieldTest).fields.detect { |f| f.name == :dragonfly_asset }.children_fields).to eq(%i[dragonfly_asset_name dragonfly_asset_uid])
       end
     end
 
@@ -180,11 +180,11 @@ RSpec.describe RailsAdmin::Config::Fields::Base do
     if defined?(ActiveStorage)
       context 'of a ActiveStorage installation' do
         it 'is _attachment and _blob fields' do
-          expect(RailsAdmin.config(FieldTest).fields.detect { |f| f.name == :active_storage_asset }.children_fields).to match_array [:active_storage_asset_attachment, :active_storage_asset_blob]
+          expect(RailsAdmin.config(FieldTest).fields.detect { |f| f.name == :active_storage_asset }.children_fields).to match_array %i[active_storage_asset_attachment active_storage_asset_blob]
         end
 
         it 'is hidden, not filterable' do
-          fields = RailsAdmin.config(FieldTest).fields.select { |f| [:active_storage_asset_attachment, :active_storage_asset_blob].include?(f.name) }
+          fields = RailsAdmin.config(FieldTest).fields.select { |f| %i[active_storage_asset_attachment active_storage_asset_blob].include?(f.name) }
           expect(fields).to all(be_hidden)
           expect(fields).not_to include(be_filterable)
         end
@@ -192,11 +192,11 @@ RSpec.describe RailsAdmin::Config::Fields::Base do
 
       context 'of a ActiveStorage installation with multiple file support' do
         it 'is _attachment and _blob fields' do
-          expect(RailsAdmin.config(FieldTest).fields.detect { |f| f.name == :active_storage_assets }.children_fields).to match_array [:active_storage_assets_attachments, :active_storage_assets_blobs]
+          expect(RailsAdmin.config(FieldTest).fields.detect { |f| f.name == :active_storage_assets }.children_fields).to match_array %i[active_storage_assets_attachments active_storage_assets_blobs]
         end
 
         it 'is hidden, not filterable' do
-          fields = RailsAdmin.config(FieldTest).fields.select { |f| [:active_storage_assets_attachments, :active_storage_assets_blobs].include?(f.name) }
+          fields = RailsAdmin.config(FieldTest).fields.select { |f| %i[active_storage_assets_attachments active_storage_assets_blobs].include?(f.name) }
           expect(fields).to all(be_hidden)
           expect(fields).not_to include(be_filterable)
         end
@@ -538,8 +538,8 @@ RSpec.describe RailsAdmin::Config::Fields::Base do
         column :updated_on, :timestamp
         column :deleted_on, :timestamp
       end
-      expect(RailsAdmin.config(FieldVisibilityTest).base.fields.select(&:visible?).collect(&:name)).to match_array [:_id, :created_at, :created_on, :deleted_at, :deleted_on, :id, :name, :updated_at, :updated_on]
-      expect(RailsAdmin.config(FieldVisibilityTest).list.fields.select(&:visible?).collect(&:name)).to match_array [:_id, :created_at, :created_on, :deleted_at, :deleted_on, :id, :name, :updated_at, :updated_on]
+      expect(RailsAdmin.config(FieldVisibilityTest).base.fields.select(&:visible?).collect(&:name)).to match_array %i[_id created_at created_on deleted_at deleted_on id name updated_at updated_on]
+      expect(RailsAdmin.config(FieldVisibilityTest).list.fields.select(&:visible?).collect(&:name)).to match_array %i[_id created_at created_on deleted_at deleted_on id name updated_at updated_on]
       expect(RailsAdmin.config(FieldVisibilityTest).edit.fields.select(&:visible?).collect(&:name)).to match_array [:name]
       expect(RailsAdmin.config(FieldVisibilityTest).show.fields.select(&:visible?).collect(&:name)).to match_array [:name]
     end

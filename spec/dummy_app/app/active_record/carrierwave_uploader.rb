@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require 'mini_magick'
 class CarrierwaveUploader < CarrierWave::Uploader::Base
   # Include RMagick or ImageScience support:

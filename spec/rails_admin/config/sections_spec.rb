@@ -110,9 +110,9 @@ RSpec.describe RailsAdmin::Config::Sections do
         end
       end
 
-      expect(RailsAdmin.config(Team).list.visible_groups.collect { |g| g.visible_fields.collect(&:name) }).to eq([[:founded], [:name, :wins]])
-      expect(RailsAdmin.config(Team).edit.visible_groups.collect { |g| g.visible_fields.collect(&:name) }).to eq([[:name], [:founded, :wins]])
-      expect(RailsAdmin.config(Team).create.visible_groups.collect { |g| g.visible_fields.collect(&:name) }).to eq([[:name], [:founded, :wins]])
+      expect(RailsAdmin.config(Team).list.visible_groups.collect { |g| g.visible_fields.collect(&:name) }).to eq([[:founded], %i[name wins]])
+      expect(RailsAdmin.config(Team).edit.visible_groups.collect { |g| g.visible_fields.collect(&:name) }).to eq([[:name], %i[founded wins]])
+      expect(RailsAdmin.config(Team).create.visible_groups.collect { |g| g.visible_fields.collect(&:name) }).to eq([[:name], %i[founded wins]])
       expect(RailsAdmin.config(Team).update.visible_groups.collect { |g| g.visible_fields.collect(&:name) }).to eq([[:name], [:founded], [:wins], [:losses]])
       expect(RailsAdmin.config(Team).visible_groups.collect { |g| g.visible_fields.collect(&:name) }.flatten.count).to eq(20)
       expect(RailsAdmin.config(Team).export.visible_groups.collect { |g| g.visible_fields.collect(&:name) }.flatten.count).to eq(20)

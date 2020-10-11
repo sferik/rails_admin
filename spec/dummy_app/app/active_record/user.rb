@@ -16,6 +16,6 @@ class User < ActiveRecord::Base
   end
 
   def roles_enum
-    [:admin, :user]
+    %i[admin user]
   end
 end

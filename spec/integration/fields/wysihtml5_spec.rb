@@ -25,6 +25,6 @@ RSpec.describe 'Wysihtml5 field', type: :request do
     end
 
     visit new_path(model_name: 'draft')
-    is_expected.to have_selector("textarea#draft_notes[data-richtext=\"bootstrap-wysihtml5\"][data-options]")
+    is_expected.to have_selector('textarea#draft_notes[data-richtext="bootstrap-wysihtml5"][data-options]')
   end
 end

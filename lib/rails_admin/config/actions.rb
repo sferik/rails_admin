@@ -95,11 +95,10 @@ module RailsAdmin
         def add_action_custom_key(action, &block)
           action.instance_eval(&block) if block
           @@actions ||= []
-          if action.custom_key.in?(@@actions.collect(&:custom_key))
-            raise "Action #{action.custom_key} already exists. Please change its custom key."
-          else
-            @@actions << action
-          end
+
+          raise "Action #{action.custom_key} already exists. Please change its custom key." if action.custom_key.in?(@@actions.collect(&:custom_key))
+
+          @@actions << action
         end
       end
     end

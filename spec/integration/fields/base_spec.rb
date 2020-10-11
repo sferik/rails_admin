@@ -39,7 +39,7 @@ RSpec.describe 'Base field', type: :request do
         field :color, :enum do
           default_value 'black'
           enum do
-            %w(black white)
+            %w[black white]
           end
         end
       end

@@ -1,7 +1,7 @@
 # Configure Rails Envinronment
 ENV['RAILS_ENV'] = 'test'
 CI_ORM = (ENV['CI_ORM'] || :active_record).to_sym
-CI_TARGET_ORMS = [:active_record, :mongoid].freeze
+CI_TARGET_ORMS = %i[active_record mongoid].freeze
 PK_COLUMN = {active_record: :id, mongoid: :_id}[CI_ORM]
 
 require 'simplecov'
@@ -15,7 +15,7 @@ SimpleCov.start do
   minimum_coverage(CI_ORM == :mongoid ? 90.05 : 91.21)
 end
 
-require File.expand_path('../dummy_app/config/environment', __FILE__)
+require File.expand_path('dummy_app/config/environment', __dir__)
 
 require 'rspec/rails'
 require 'factory_bot'
@@ -24,8 +24,8 @@ require 'policies'
 require 'database_cleaner'
 require "orm/#{CI_ORM}"
 
-Dir[File.expand_path('../support/**/*.rb', __FILE__),
-    File.expand_path('../shared_examples/**/*.rb', __FILE__)].each { |f| require f }
+Dir[File.expand_path('support/**/*.rb', __dir__),
+    File.expand_path('shared_examples/**/*.rb', __dir__)].sort.each { |f| require f }
 
 ActionMailer::Base.delivery_method = :test
 ActionMailer::Base.perform_deliveries = true
@@ -73,7 +73,7 @@ RSpec.configure do |config|
   config.include Capybara::DSL, type: :request
 
   config.before do |example|
-    DatabaseCleaner.strategy = (CI_ORM == :mongoid || example.metadata[:js]) ? :truncation : :transaction
+    DatabaseCleaner.strategy = (CI_ORM == :mongoid || example.metadata[:js]) ? :truncation : :transaction # rubocop:disable Style/TernaryParentheses
 
     DatabaseCleaner.start
     RailsAdmin::Config.reset

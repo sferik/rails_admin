@@ -124,6 +124,7 @@ module RailsAdmin
 
       def to_statement
         return if [@operator, @value].any? { |v| v == '_discard' }
+
         unary_operators[@operator] || unary_operators[@value] ||
           build_statement_for_type_generic
       end
@@ -153,7 +154,8 @@ module RailsAdmin
         case @value
         when Array then
           val, range_begin, range_end = *@value.collect do |v|
-            next unless v.to_i.to_s == v || v.to_f.to_s == v
+            next unless [v.to_i.to_s, v.to_f.to_s].include?(v)
+
             @type == :integer ? v.to_i : v.to_f
           end
           case @operator
@@ -171,8 +173,20 @@ module RailsAdmin
 
       def build_statement_for_date
         start_date, end_date = get_filtering_duration
-        start_date = (start_date.to_date rescue nil) if start_date
-        end_date = (end_date.to_date rescue nil) if end_date
+        if start_date
+          start_date = (begin
+                          start_date.to_date
+                        rescue StandardError
+                          nil
+                        end)
+        end
+        if end_date
+          end_date = (begin
+                        end_date.to_date
+                      rescue StandardError
+                        nil
+                      end)
+        end
         range_filter(start_date, end_date)
       end
 

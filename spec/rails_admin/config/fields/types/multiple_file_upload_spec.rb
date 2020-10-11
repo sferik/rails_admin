@@ -8,13 +8,15 @@ RSpec.describe RailsAdmin::Config::Fields::Types::MultipleFileUpload do
       RailsAdmin.config do |config|
         config.model FieldTest do
           field :carrierwave_assets, :multiple_carrierwave
-          field :active_storage_assets, :multiple_active_storage do
-            delete_method :remove_active_storage_assets
-          end if defined?(ActiveStorage)
+          if defined?(ActiveStorage)
+            field :active_storage_assets, :multiple_active_storage do
+              delete_method :remove_active_storage_assets
+            end
+          end
         end
       end
-      expect(RailsAdmin.config(FieldTest).field(:carrierwave_assets).with(object: FieldTest.new).allowed_methods.collect(&:to_s)).to eq %w(carrierwave_assets)
-      expect(RailsAdmin.config(FieldTest).field(:active_storage_assets).with(object: FieldTest.new).allowed_methods.collect(&:to_s)).to eq %w(active_storage_assets remove_active_storage_assets) if defined?(ActiveStorage)
+      expect(RailsAdmin.config(FieldTest).field(:carrierwave_assets).with(object: FieldTest.new).allowed_methods.collect(&:to_s)).to eq %w[carrierwave_assets]
+      expect(RailsAdmin.config(FieldTest).field(:active_storage_assets).with(object: FieldTest.new).allowed_methods.collect(&:to_s)).to eq %w[active_storage_assets remove_active_storage_assets] if defined?(ActiveStorage)
     end
   end
 
