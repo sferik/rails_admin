@@ -32,7 +32,7 @@ require 'rspec/rails'
 require 'factory_bot'
 require 'factories'
 require 'policies'
-require 'database_cleaner'
+require "database_cleaner/#{CI_ORM}"
 require "orm/#{CI_ORM}"
 
 Dir[File.expand_path('../support/**/*.rb', __FILE__),
@@ -93,7 +93,7 @@ RSpec.configure do |config|
   end
 
   config.before do |example|
-    DatabaseCleaner.strategy = (CI_ORM == :mongoid || example.metadata[:js]) ? :truncation : :transaction
+    DatabaseCleaner.strategy = (CI_ORM == :mongoid || example.metadata[:js]) ? :deletion : :transaction
 
     DatabaseCleaner.start
     RailsAdmin::Config.reset

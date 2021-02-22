@@ -25,7 +25,8 @@ end
 group :test do
   gem "cancancan", "~> 3.0", github: "ghiculescu/cancancan", branch: "avoid-resolve_column_aliases-2"
   gem "carrierwave", [">= 2.0.0.rc", "< 3"]
-  gem "database_cleaner", [">= 1.2", "!= 1.4.0", "!= 1.5.0", "< 2.0"]
+  gem "database_cleaner-mongoid", ">= 2.0", require: false
+  gem "database_cleaner-active_record", ">= 2.0", require: false
   gem "dragonfly", "~> 1.0"
   gem "factory_bot", ">= 4.2"
   gem "generator_spec", ">= 0.8"
