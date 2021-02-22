@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <%= render "layouts/rails_admin/head" %>
+  </head>
+  <body class="rails_admin">
+    <div id="admin-js" data-i18n-options="<%= I18n.t("admin.js").to_json %>"></div>
+    <div class="label label-warning" id="loading" style="display:none; position:fixed; right:20px; bottom:20px; z-index:100000">
+      <%= t('admin.loading') %>
+    </div>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <%= render "layouts/rails_admin/navigation" %>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar-nav">
+          <%= render "layouts/rails_admin/sidebar_navigation" %>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+          <div class="content" data-pjax-container="<%= true %>">
+            <%= render template: 'layouts/rails_admin/pjax' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

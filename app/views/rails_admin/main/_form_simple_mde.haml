@@ -1,8 +1,0 @@
-:ruby
-  js_data = {
-    js_location: field.js_location,
-    css_location: field.css_location,
-    instance_config: field.instance_config
-  }
-
-= form.text_area field.method_name, field.html_attributes.reverse_merge(data: { richtext: 'simplemde', options: js_data.to_json }).reverse_merge({ value: field.form_value })

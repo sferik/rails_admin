@@ -4,7 +4,6 @@ source "https://rubygems.org"
 
 gem "appraisal", ">= 2.0"
 gem "rails", "~> 5.2.0"
-gem "haml"
 gem "devise", "~> 4.4"
 gem "sassc-rails", "~> 2.1"
 

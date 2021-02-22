@@ -1,0 +1,21 @@
+<div class="controls col-sm-10" data-nestedmany="true">
+  <div class="btn-group">
+    <a class="<%= (field.active? ? 'active' : '') %> btn btn-info toggler" data-target="<%= form.jquery_namespace(field) %> > .tab-content, <%= form.jquery_namespace(field) %> > .controls > .nav" data-toggle="button">
+      <i class="icon-white"></i>
+    </a>
+    <% unless field.nested_form[:update_only] || !field.inline_add %>
+      <%= form.link_to_add "<i class=\"icon-plus icon-white\"></i> #{wording_for(:link, :new, field.associated_model_config.abstract_model)}".html_safe, field.name, { class: 'btn btn-info' } %>
+    <% end %>
+  </div>
+  <%= form.errors_for(field) %>
+  <%= form.help_for(field) %>
+  <ul class="nav nav-tabs"></ul>
+</div>
+<div class="tab-content">
+  <%= form.fields_for field.name do |nested_form| %>
+    <% if field.nested_form[:allow_destroy] || nested_form.options[:child_index] == "new_#{field.name}" %>
+      <%= nested_form.link_to_remove '<span class="btn btn-small btn-danger"><i class="icon-trash icon-white"></i></span>'.html_safe %>
+    <% end %>
+    <%= nested_form.generate({action: :nested, model_config: field.associated_model_config, nested_in: field }) %>
+  <% end %>
+</div>

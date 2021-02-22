@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'appraisal', '>= 2.0'
 gem 'rails'
-gem 'haml'
 gem 'devise'
 
 group :active_record do

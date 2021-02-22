@@ -6,7 +6,6 @@ require 'rails_admin/version'
 Gem::Specification.new do |spec|
   # If you add a dependency, please maintain alphabetical order
   spec.add_dependency 'builder', '~> 3.1'
-  spec.add_dependency 'haml', '>= 4.0', '< 6'
   spec.add_dependency 'jquery-rails', ['>= 3.0', '< 5']
   spec.add_dependency 'jquery-ui-rails', ['>= 5.0', '< 7']
   spec.add_dependency 'kaminari', '>= 0.14', '< 2.0'

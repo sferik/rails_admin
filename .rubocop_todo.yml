@@ -122,7 +122,7 @@ Lint/ScriptPermission:
 
 # Offense count: 2
 # Cop supports --auto-correct.
-Lint/UnneededSplatExpansion:
+Lint/RedundantSplatExpansion:
   Exclude:
     - 'spec/rails_admin/adapters/active_record/association_spec.rb'
 
@@ -234,7 +234,6 @@ Style/IdenticalConditionalBranches:
 # Cop supports --auto-correct.
 Style/IfUnlessModifier:
   Exclude:
-    - 'config/initializers/haml.rb'
     - 'lib/rails_admin/adapters/active_record.rb'
     - 'lib/rails_admin/adapters/mongoid.rb'
     - 'lib/rails_admin/bootstrap-sass.rb'

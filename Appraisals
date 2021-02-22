@@ -93,7 +93,6 @@ end
 
 appraise "rails-6.0" do
   gem 'rails', '~> 6.0.0'
-  gem 'haml'
   gem 'sassc-rails', '~> 2.1'
   gem 'devise', '~> 4.7'
 

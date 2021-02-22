@@ -1,4 +1,0 @@
-- if current_page.first?
-  %li.prev.disabled= link_to raw(t 'admin.pagination.previous'), '#'
-- else
-  %li.prev= link_to raw(t 'admin.pagination.previous'), url, class: (remote ? 'pjax' : '')

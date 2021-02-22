@@ -1,7 +1,0 @@
-:ruby
-  js_data = {
-    csspath: field.css_location,
-    jspath: field.js_location
-  }
-
-= form.rich_text_area field.method_name, field.html_attributes.reverse_merge(data: { options: js_data.to_json })

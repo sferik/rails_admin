@@ -1,4 +1,0 @@
-- if current_page.last?
-  %li.next.disabled= link_to raw(t 'admin.pagination.next'), '#'
-- else
-  %li.next= link_to raw(t 'admin.pagination.next'), url, class: (remote ? 'pjax' : '')

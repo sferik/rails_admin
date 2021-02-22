@@ -1,8 +1,0 @@
-:ruby
-  js_data = {
-    csspath: field.css_location,
-    jspath: field.js_location,
-    config_options: field.config_options.to_json
-  }
-
-= form.text_area field.method_name, field.html_attributes.reverse_merge(data: { richtext: 'bootstrap-wysihtml5', options: js_data.to_json }).reverse_merge({ value: field.form_value })

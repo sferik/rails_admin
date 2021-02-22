@@ -1,0 +1,9 @@
+<% if current_page.last? %>
+  <li class="next disabled">
+    <%= link_to raw(t 'admin.pagination.next'), '#' %>
+  </li>
+<% else %>
+  <li class="next">
+    <%= link_to raw(t 'admin.pagination.next'), url, class: (remote ? 'pjax' : '') %>
+  </li>
+<% end %>

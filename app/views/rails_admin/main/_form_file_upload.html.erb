@@ -1,0 +1,17 @@
+<% file = field.value %>
+<% if field.cache_method %>
+  <%= form.hidden_field(field.cache_method, value: field.cache_value) %>
+<% end %>
+<div class="toggle" style="<%= "display:none;" if file && field.delete_method && form.object.send(field.delete_method) == '1' %>">
+  <% if value = field.pretty_value %>
+    <%= value %>
+  <% end %>
+  <%= form.file_field(field.name, field.html_attributes.reverse_merge({ data: { fileupload: true }})) %>
+</div>
+<% if field.optional? && field.errors.blank? && file && field.delete_method %>
+  <a class="btn btn-info btn-remove-image" data-toggle="button" href="#" role="button">
+    <i class="icon-white icon-trash"></i>
+    <%= I18n.t('admin.actions.delete.menu').capitalize + " #{field.label.downcase}" %>
+  </a>
+  <%= form.check_box(field.delete_method, style: 'display:none;') %>
+<% end %>

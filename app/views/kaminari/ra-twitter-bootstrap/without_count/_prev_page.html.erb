@@ -1,0 +1,9 @@
+<% if current_page.first? %>
+  <li class="prev disabled">
+    <%= link_to raw(t 'admin.pagination.previous'), '#' %>
+  </li>
+<% else %>
+  <li class="prev">
+    <%= link_to raw(t 'admin.pagination.previous'), url, class: (remote ? 'pjax' : '') %>
+  </li>
+<% end %>
