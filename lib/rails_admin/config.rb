@@ -62,6 +62,9 @@ module RailsAdmin
       # Enable horizontal-scrolling table in list view, ignore total_columns_width
       attr_accessor :sidescroll
 
+      # Enable Collapsible Scroll Bar to make long sidebar menu manageable
+      attr_accessor :collapsible_sidebar
+
       # set parent controller
       attr_accessor :parent_controller
 
@@ -283,6 +286,7 @@ module RailsAdmin
         @included_models = []
         @total_columns_width = 697
         @sidescroll = nil
+        @collapsible_sidebar = false
         @label_methods = [:name, :title]
         @main_app_name = proc { [Rails.application.engine_name.titleize.chomp(' Application'), 'Admin'] }
         @registry = {}

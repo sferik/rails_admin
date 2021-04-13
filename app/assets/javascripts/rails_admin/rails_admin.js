@@ -17,5 +17,6 @@
 //=  require 'rails_admin/bootstrap/bootstrap'
 //=  require 'rails_admin/ra.widgets'
 //=  require 'rails_admin/ra.sidescroll'
+//=  require 'rails_admin/ra.collapsible_sidebar'
 //=  require 'rails_admin/ui'
 //=  require 'rails_admin/custom/ui'

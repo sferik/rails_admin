@@ -80,7 +80,12 @@ module RailsAdmin
 
         label = navigation_label || t('admin.misc.navigation')
 
-        %(<li class='dropdown-header'>#{capitalize_first_letter label}</li>#{li_stack}) if li_stack.present?
+        if RailsAdmin::Config.collapsible_sidebar
+          collapse_id = navigation_label.parameterize.underscore rescue 'root-menu'
+          %(<li data-menu-label-id='#{collapse_id}' data-menu-label='#{capitalize_first_letter label}' class='dropdown-header bg-info' style="cursor:pointer;" data-toggle=\"collapse\" href="##{collapse_id}">#{capitalize_first_letter label} -</li><div id='#{collapse_id}' class="ra-menu-collapse collapse in"><ul class="nav nav-pills nav-stacked">#{li_stack}</ul></div>) if li_stack.present?
+        else
+          %(<li class='dropdown-header'>#{capitalize_first_letter label}</li>#{li_stack}) if li_stack.present?
+        end
       end.join.html_safe
     end
 
