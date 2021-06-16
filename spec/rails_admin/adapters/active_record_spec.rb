@@ -11,9 +11,9 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
   end
   let(:like) do
     if ['postgresql', 'postgis'].include? activerecord_config[:adapter]
-      '(field ILIKE ?)'
+      '(field_tests.field ILIKE ?)'
     else
-      '(LOWER(field) LIKE ?)'
+      '(LOWER(field_tests.field) LIKE ?)'
     end
   end
 
@@ -255,7 +255,7 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
     let(:abstract_model) { RailsAdmin::AbstractModel.new('FieldTest') }
 
     def build_statement(type, value, operator)
-      abstract_model.send(:build_statement, :field, type, value, operator)
+      abstract_model.send(:build_statement, 'field_tests.field', type, value, operator)
     end
 
     it "ignores '_discard' operator or value" do
@@ -272,7 +272,7 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
         expect(build_statement(:string, 'foo', 'like')).to eq([like, '%foo%'])
         expect(build_statement(:string, 'foo', 'starts_with')).to eq([like, 'foo%'])
         expect(build_statement(:string, 'foo', 'ends_with')).to eq([like, '%foo'])
-        expect(build_statement(:string, 'foo', 'is')).to eq(['(field = ?)', 'foo'])
+        expect(build_statement(:string, 'foo', 'is')).to eq(['(field_tests.field = ?)', 'foo'])
       end
 
       it 'performs case-insensitive searches' do
@@ -284,44 +284,44 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
 
       it 'chooses like statement in per-model basis' do
         allow(FieldTest.connection).to receive(:adapter_name).and_return('postgresql')
-        expect(build_statement(:string, 'foo', 'default')).to eq(['(field ILIKE ?)', '%foo%'])
+        expect(build_statement(:string, 'foo', 'default')).to eq(['(field_tests.field ILIKE ?)', '%foo%'])
         allow(FieldTest.connection).to receive(:adapter_name).and_return('sqlite3')
-        expect(build_statement(:string, 'foo', 'default')).to eq(['(LOWER(field) LIKE ?)', '%foo%'])
+        expect(build_statement(:string, 'foo', 'default')).to eq(['(LOWER(field_tests.field) LIKE ?)', '%foo%'])
       end
 
       it "supports '_blank' operator" do
         [['_blank', ''], ['', '_blank']].each do |value, operator|
-          expect(build_statement(:string, value, operator)).to eq(["(field IS NULL OR field = '')"])
+          expect(build_statement(:string, value, operator)).to eq(["(field_tests.field IS NULL OR field_tests.field = '')"])
         end
       end
 
       it "supports '_present' operator" do
         [['_present', ''], ['', '_present']].each do |value, operator|
-          expect(build_statement(:string, value, operator)).to eq(["(field IS NOT NULL AND field != '')"])
+          expect(build_statement(:string, value, operator)).to eq(["(field_tests.field IS NOT NULL AND field_tests.field != '')"])
         end
       end
 
       it "supports '_null' operator" do
         [['_null', ''], ['', '_null']].each do |value, operator|
-          expect(build_statement(:string, value, operator)).to eq(['(field IS NULL)'])
+          expect(build_statement(:string, value, operator)).to eq(['(field_tests.field IS NULL)'])
         end
       end
 
       it "supports '_not_null' operator" do
         [['_not_null', ''], ['', '_not_null']].each do |value, operator|
-          expect(build_statement(:string, value, operator)).to eq(['(field IS NOT NULL)'])
+          expect(build_statement(:string, value, operator)).to eq(['(field_tests.field IS NOT NULL)'])
         end
       end
 
       it "supports '_empty' operator" do
         [['_empty', ''], ['', '_empty']].each do |value, operator|
-          expect(build_statement(:string, value, operator)).to eq(["(field = '')"])
+          expect(build_statement(:string, value, operator)).to eq(["(field_tests.field = '')"])
         end
       end
 
       it "supports '_not_empty' operator" do
         [['_not_empty', ''], ['', '_not_empty']].each do |value, operator|
-          expect(build_statement(:string, value, operator)).to eq(["(field != '')"])
+          expect(build_statement(:string, value, operator)).to eq(["(field_tests.field != '')"])
         end
       end
     end
@@ -329,114 +329,114 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
     describe 'boolean type queries' do
       it 'supports boolean type query' do
         %w(false f 0).each do |value|
-          expect(build_statement(:boolean, value, nil)).to eq(['(field IS NULL OR field = ?)', false])
+          expect(build_statement(:boolean, value, nil)).to eq(['(field_tests.field IS NULL OR field_tests.field = ?)', false])
         end
         %w(true t 1).each do |value|
-          expect(build_statement(:boolean, value, nil)).to eq(['(field = ?)', true])
+          expect(build_statement(:boolean, value, nil)).to eq(['(field_tests.field = ?)', true])
         end
         expect(build_statement(:boolean, 'word', nil)).to be_nil
       end
 
       it "supports '_blank' operator" do
         [['_blank', ''], ['', '_blank']].each do |value, operator|
-          expect(build_statement(:boolean, value, operator)).to eq(["(field IS NULL)"])
+          expect(build_statement(:boolean, value, operator)).to eq(["(field_tests.field IS NULL)"])
         end
       end
 
       it "supports '_present' operator" do
         [['_present', ''], ['', '_present']].each do |value, operator|
-          expect(build_statement(:boolean, value, operator)).to eq(["(field IS NOT NULL)"])
+          expect(build_statement(:boolean, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
         end
       end
 
       it "supports '_null' operator" do
         [['_null', ''], ['', '_null']].each do |value, operator|
-          expect(build_statement(:boolean, value, operator)).to eq(['(field IS NULL)'])
+          expect(build_statement(:boolean, value, operator)).to eq(['(field_tests.field IS NULL)'])
         end
       end
 
       it "supports '_not_null' operator" do
         [['_not_null', ''], ['', '_not_null']].each do |value, operator|
-          expect(build_statement(:boolean, value, operator)).to eq(['(field IS NOT NULL)'])
+          expect(build_statement(:boolean, value, operator)).to eq(['(field_tests.field IS NOT NULL)'])
         end
       end
 
       it "supports '_empty' operator" do
         [['_empty', ''], ['', '_empty']].each do |value, operator|
-          expect(build_statement(:boolean, value, operator)).to eq(["(field IS NULL)"])
+          expect(build_statement(:boolean, value, operator)).to eq(["(field_tests.field IS NULL)"])
         end
       end
 
       it "supports '_not_empty' operator" do
         [['_not_empty', ''], ['', '_not_empty']].each do |value, operator|
-          expect(build_statement(:boolean, value, operator)).to eq(["(field IS NOT NULL)"])
+          expect(build_statement(:boolean, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
         end
       end
     end
 
     describe 'numeric type queries' do
       it 'supports integer type query' do
-        expect(build_statement(:integer, '1', nil)).to eq(['(field = ?)', 1])
+        expect(build_statement(:integer, '1', nil)).to eq(['(field_tests.field = ?)', 1])
         expect(build_statement(:integer, 'word', nil)).to be_nil
-        expect(build_statement(:integer, '1', 'default')).to eq(['(field = ?)', 1])
+        expect(build_statement(:integer, '1', 'default')).to eq(['(field_tests.field = ?)', 1])
         expect(build_statement(:integer, 'word', 'default')).to be_nil
-        expect(build_statement(:integer, '1', 'between')).to eq(['(field = ?)', 1])
+        expect(build_statement(:integer, '1', 'between')).to eq(['(field_tests.field = ?)', 1])
         expect(build_statement(:integer, 'word', 'between')).to be_nil
-        expect(build_statement(:integer, ['6', '', ''], 'default')).to eq(['(field = ?)', 6])
-        expect(build_statement(:integer, ['7', '10', ''], 'default')).to eq(['(field = ?)', 7])
-        expect(build_statement(:integer, ['8', '', '20'], 'default')).to eq(['(field = ?)', 8])
-        expect(build_statement(:integer, %w(9 10 20), 'default')).to eq(['(field = ?)', 9])
+        expect(build_statement(:integer, ['6', '', ''], 'default')).to eq(['(field_tests.field = ?)', 6])
+        expect(build_statement(:integer, ['7', '10', ''], 'default')).to eq(['(field_tests.field = ?)', 7])
+        expect(build_statement(:integer, ['8', '', '20'], 'default')).to eq(['(field_tests.field = ?)', 8])
+        expect(build_statement(:integer, %w(9 10 20), 'default')).to eq(['(field_tests.field = ?)', 9])
       end
 
       it 'supports integer type range query' do
         expect(build_statement(:integer, ['', '', ''], 'between')).to be_nil
         expect(build_statement(:integer, ['2', '', ''], 'between')).to be_nil
-        expect(build_statement(:integer, ['', '3', ''], 'between')).to eq(['(field >= ?)', 3])
-        expect(build_statement(:integer, ['', '', '5'], 'between')).to eq(['(field <= ?)', 5])
-        expect(build_statement(:integer, ['', '10', '20'], 'between')).to eq(['(field BETWEEN ? AND ?)', 10, 20])
-        expect(build_statement(:integer, %w(15 10 20), 'between')).to eq(['(field BETWEEN ? AND ?)', 10, 20])
+        expect(build_statement(:integer, ['', '3', ''], 'between')).to eq(['(field_tests.field >= ?)', 3])
+        expect(build_statement(:integer, ['', '', '5'], 'between')).to eq(['(field_tests.field <= ?)', 5])
+        expect(build_statement(:integer, ['', '10', '20'], 'between')).to eq(['(field_tests.field BETWEEN ? AND ?)', 10, 20])
+        expect(build_statement(:integer, %w(15 10 20), 'between')).to eq(['(field_tests.field BETWEEN ? AND ?)', 10, 20])
         expect(build_statement(:integer, ['', 'word1', ''], 'between')).to be_nil
         expect(build_statement(:integer, ['', '', 'word2'], 'between')).to be_nil
         expect(build_statement(:integer, ['', 'word3', 'word4'], 'between')).to be_nil
       end
 
       it 'supports both decimal and float type queries' do
-        expect(build_statement(:decimal, '1.1', nil)).to eq(['(field = ?)', 1.1])
+        expect(build_statement(:decimal, '1.1', nil)).to eq(['(field_tests.field = ?)', 1.1])
         expect(build_statement(:decimal, 'word', nil)).to be_nil
-        expect(build_statement(:decimal, '1.1', 'default')).to eq(['(field = ?)', 1.1])
+        expect(build_statement(:decimal, '1.1', 'default')).to eq(['(field_tests.field = ?)', 1.1])
         expect(build_statement(:decimal, 'word', 'default')).to be_nil
-        expect(build_statement(:decimal, '1.1', 'between')).to eq(['(field = ?)', 1.1])
+        expect(build_statement(:decimal, '1.1', 'between')).to eq(['(field_tests.field = ?)', 1.1])
         expect(build_statement(:decimal, 'word', 'between')).to be_nil
-        expect(build_statement(:decimal, ['6.1', '', ''], 'default')).to eq(['(field = ?)', 6.1])
-        expect(build_statement(:decimal, ['7.1', '10.1', ''], 'default')).to eq(['(field = ?)', 7.1])
-        expect(build_statement(:decimal, ['8.1', '', '20.1'], 'default')).to eq(['(field = ?)', 8.1])
-        expect(build_statement(:decimal, ['9.1', '10.1', '20.1'], 'default')).to eq(['(field = ?)', 9.1])
+        expect(build_statement(:decimal, ['6.1', '', ''], 'default')).to eq(['(field_tests.field = ?)', 6.1])
+        expect(build_statement(:decimal, ['7.1', '10.1', ''], 'default')).to eq(['(field_tests.field = ?)', 7.1])
+        expect(build_statement(:decimal, ['8.1', '', '20.1'], 'default')).to eq(['(field_tests.field = ?)', 8.1])
+        expect(build_statement(:decimal, ['9.1', '10.1', '20.1'], 'default')).to eq(['(field_tests.field = ?)', 9.1])
         expect(build_statement(:decimal, ['', '', ''], 'between')).to be_nil
         expect(build_statement(:decimal, ['2.1', '', ''], 'between')).to be_nil
-        expect(build_statement(:decimal, ['', '3.1', ''], 'between')).to eq(['(field >= ?)', 3.1])
-        expect(build_statement(:decimal, ['', '', '5.1'], 'between')).to eq(['(field <= ?)', 5.1])
-        expect(build_statement(:decimal, ['', '10.1', '20.1'], 'between')).to eq(['(field BETWEEN ? AND ?)', 10.1, 20.1])
-        expect(build_statement(:decimal, ['15.1', '10.1', '20.1'], 'between')).to eq(['(field BETWEEN ? AND ?)', 10.1, 20.1])
+        expect(build_statement(:decimal, ['', '3.1', ''], 'between')).to eq(['(field_tests.field >= ?)', 3.1])
+        expect(build_statement(:decimal, ['', '', '5.1'], 'between')).to eq(['(field_tests.field <= ?)', 5.1])
+        expect(build_statement(:decimal, ['', '10.1', '20.1'], 'between')).to eq(['(field_tests.field BETWEEN ? AND ?)', 10.1, 20.1])
+        expect(build_statement(:decimal, ['15.1', '10.1', '20.1'], 'between')).to eq(['(field_tests.field BETWEEN ? AND ?)', 10.1, 20.1])
         expect(build_statement(:decimal, ['', 'word1', ''], 'between')).to be_nil
         expect(build_statement(:decimal, ['', '', 'word2'], 'between')).to be_nil
         expect(build_statement(:decimal, ['', 'word3', 'word4'], 'between')).to be_nil
 
-        expect(build_statement(:float, '1.1', nil)).to eq(['(field = ?)', 1.1])
+        expect(build_statement(:float, '1.1', nil)).to eq(['(field_tests.field = ?)', 1.1])
         expect(build_statement(:float, 'word', nil)).to be_nil
-        expect(build_statement(:float, '1.1', 'default')).to eq(['(field = ?)', 1.1])
+        expect(build_statement(:float, '1.1', 'default')).to eq(['(field_tests.field = ?)', 1.1])
         expect(build_statement(:float, 'word', 'default')).to be_nil
-        expect(build_statement(:float, '1.1', 'between')).to eq(['(field = ?)', 1.1])
+        expect(build_statement(:float, '1.1', 'between')).to eq(['(field_tests.field = ?)', 1.1])
         expect(build_statement(:float, 'word', 'between')).to be_nil
-        expect(build_statement(:float, ['6.1', '', ''], 'default')).to eq(['(field = ?)', 6.1])
-        expect(build_statement(:float, ['7.1', '10.1', ''], 'default')).to eq(['(field = ?)', 7.1])
-        expect(build_statement(:float, ['8.1', '', '20.1'], 'default')).to eq(['(field = ?)', 8.1])
-        expect(build_statement(:float, ['9.1', '10.1', '20.1'], 'default')).to eq(['(field = ?)', 9.1])
+        expect(build_statement(:float, ['6.1', '', ''], 'default')).to eq(['(field_tests.field = ?)', 6.1])
+        expect(build_statement(:float, ['7.1', '10.1', ''], 'default')).to eq(['(field_tests.field = ?)', 7.1])
+        expect(build_statement(:float, ['8.1', '', '20.1'], 'default')).to eq(['(field_tests.field = ?)', 8.1])
+        expect(build_statement(:float, ['9.1', '10.1', '20.1'], 'default')).to eq(['(field_tests.field = ?)', 9.1])
         expect(build_statement(:float, ['', '', ''], 'between')).to be_nil
         expect(build_statement(:float, ['2.1', '', ''], 'between')).to be_nil
-        expect(build_statement(:float, ['', '3.1', ''], 'between')).to eq(['(field >= ?)', 3.1])
-        expect(build_statement(:float, ['', '', '5.1'], 'between')).to eq(['(field <= ?)', 5.1])
-        expect(build_statement(:float, ['', '10.1', '20.1'], 'between')).to eq(['(field BETWEEN ? AND ?)', 10.1, 20.1])
-        expect(build_statement(:float, ['15.1', '10.1', '20.1'], 'between')).to eq(['(field BETWEEN ? AND ?)', 10.1, 20.1])
+        expect(build_statement(:float, ['', '3.1', ''], 'between')).to eq(['(field_tests.field >= ?)', 3.1])
+        expect(build_statement(:float, ['', '', '5.1'], 'between')).to eq(['(field_tests.field <= ?)', 5.1])
+        expect(build_statement(:float, ['', '10.1', '20.1'], 'between')).to eq(['(field_tests.field BETWEEN ? AND ?)', 10.1, 20.1])
+        expect(build_statement(:float, ['15.1', '10.1', '20.1'], 'between')).to eq(['(field_tests.field BETWEEN ? AND ?)', 10.1, 20.1])
         expect(build_statement(:float, ['', 'word1', ''], 'between')).to be_nil
         expect(build_statement(:float, ['', '', 'word2'], 'between')).to be_nil
         expect(build_statement(:float, ['', 'word3', 'word4'], 'between')).to be_nil
@@ -445,9 +445,9 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
       it "supports '_blank' operator" do
         [['_blank', ''], ['', '_blank']].each do |value, operator|
           aggregate_failures do
-            expect(build_statement(:integer, value, operator)).to eq(["(field IS NULL)"])
-            expect(build_statement(:decimal, value, operator)).to eq(["(field IS NULL)"])
-            expect(build_statement(:float, value, operator)).to eq(["(field IS NULL)"])
+            expect(build_statement(:integer, value, operator)).to eq(["(field_tests.field IS NULL)"])
+            expect(build_statement(:decimal, value, operator)).to eq(["(field_tests.field IS NULL)"])
+            expect(build_statement(:float, value, operator)).to eq(["(field_tests.field IS NULL)"])
           end
         end
       end
@@ -455,9 +455,9 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
       it "supports '_present' operator" do
         [['_present', ''], ['', '_present']].each do |value, operator|
           aggregate_failures do
-            expect(build_statement(:integer, value, operator)).to eq(["(field IS NOT NULL)"])
-            expect(build_statement(:decimal, value, operator)).to eq(["(field IS NOT NULL)"])
-            expect(build_statement(:float, value, operator)).to eq(["(field IS NOT NULL)"])
+            expect(build_statement(:integer, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
+            expect(build_statement(:decimal, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
+            expect(build_statement(:float, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
           end
         end
       end
@@ -465,9 +465,9 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
       it "supports '_null' operator" do
         [['_null', ''], ['', '_null']].each do |value, operator|
           aggregate_failures do
-            expect(build_statement(:integer, value, operator)).to eq(["(field IS NULL)"])
-            expect(build_statement(:decimal, value, operator)).to eq(["(field IS NULL)"])
-            expect(build_statement(:float, value, operator)).to eq(["(field IS NULL)"])
+            expect(build_statement(:integer, value, operator)).to eq(["(field_tests.field IS NULL)"])
+            expect(build_statement(:decimal, value, operator)).to eq(["(field_tests.field IS NULL)"])
+            expect(build_statement(:float, value, operator)).to eq(["(field_tests.field IS NULL)"])
           end
         end
       end
@@ -475,9 +475,9 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
       it "supports '_not_null' operator" do
         [['_not_null', ''], ['', '_not_null']].each do |value, operator|
           aggregate_failures do
-            expect(build_statement(:integer, value, operator)).to eq(["(field IS NOT NULL)"])
-            expect(build_statement(:decimal, value, operator)).to eq(["(field IS NOT NULL)"])
-            expect(build_statement(:float, value, operator)).to eq(["(field IS NOT NULL)"])
+            expect(build_statement(:integer, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
+            expect(build_statement(:decimal, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
+            expect(build_statement(:float, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
           end
         end
       end
@@ -485,9 +485,9 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
       it "supports '_empty' operator" do
         [['_empty', ''], ['', '_empty']].each do |value, operator|
           aggregate_failures do
-            expect(build_statement(:integer, value, operator)).to eq(["(field IS NULL)"])
-            expect(build_statement(:decimal, value, operator)).to eq(["(field IS NULL)"])
-            expect(build_statement(:float, value, operator)).to eq(["(field IS NULL)"])
+            expect(build_statement(:integer, value, operator)).to eq(["(field_tests.field IS NULL)"])
+            expect(build_statement(:decimal, value, operator)).to eq(["(field_tests.field IS NULL)"])
+            expect(build_statement(:float, value, operator)).to eq(["(field_tests.field IS NULL)"])
           end
         end
       end
@@ -495,9 +495,9 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
       it "supports '_not_empty' operator" do
         [['_not_empty', ''], ['', '_not_empty']].each do |value, operator|
           aggregate_failures do
-            expect(build_statement(:integer, value, operator)).to eq(["(field IS NOT NULL)"])
-            expect(build_statement(:decimal, value, operator)).to eq(["(field IS NOT NULL)"])
-            expect(build_statement(:float, value, operator)).to eq(["(field IS NOT NULL)"])
+            expect(build_statement(:integer, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
+            expect(build_statement(:decimal, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
+            expect(build_statement(:float, value, operator)).to eq(["(field_tests.field IS NOT NULL)"])
           end
         end
       end
@@ -521,8 +521,71 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
       end
     end
 
+    describe 'fulltext_indexed type queries' do
+      it 'supports string query' do
+        expect(build_statement(:fulltext_indexed, '', nil)).to be_nil
+        expect(build_statement(:fulltext_indexed, 'foo', 'was')).to be_nil
+        expect(build_statement(:fulltext_indexed, 'foo', 'default')).to eq([like, '%foo%'])
+        expect(build_statement(:fulltext_indexed, 'foo', 'like')).to eq([like, '%foo%'])
+        expect(build_statement(:fulltext_indexed, 'foo', 'starts_with')).to eq([like, 'foo%'])
+        expect(build_statement(:fulltext_indexed, 'foo', 'ends_with')).to eq([like, '%foo'])
+        expect(build_statement(:fulltext_indexed, 'foo', 'is')).to eq(['(field_tests.field = ?)', 'foo'])
+      end
+
+      it 'performs case-insensitive searches' do
+        unless ['postgresql', 'postgis'].include?(activerecord_config[:adapter])
+          expect(build_statement(:fulltext_indexed, 'foo', 'default')).to eq([like, '%foo%'])
+          expect(build_statement(:fulltext_indexed, 'FOO', 'default')).to eq([like, '%foo%'])
+        end
+      end
+
+      it 'chooses match statement which fulltext index exists' do
+        allow(FieldTest.connection).to receive(:adapter_name).and_return('mysql')
+        allow(FieldTest.connection).to receive(:index_exists?).and_return(true)
+        expect(build_statement(:fulltext_indexed, 'foo', 'default')).to eq(['(MATCH (field_tests.field) AGAINST (? IN BOOLEAN MODE))', 'foo'])
+        allow(FieldTest.connection).to receive(:adapter_name).and_return('sqlite3')
+        expect(build_statement(:fulltext_indexed, 'foo', 'default')).to eq(['(LOWER(field_tests.field) LIKE ?)', '%foo%'])
+      end
+
+      it "supports '_blank' operator" do
+        [['_blank', ''], ['', '_blank']].each do |value, operator|
+          expect(build_statement(:fulltext_indexed, value, operator)).to eq(["(field_tests.field IS NULL OR field_tests.field = '')"])
+        end
+      end
+
+      it "supports '_present' operator" do
+        [['_present', ''], ['', '_present']].each do |value, operator|
+          expect(build_statement(:fulltext_indexed, value, operator)).to eq(["(field_tests.field IS NOT NULL AND field_tests.field != '')"])
+        end
+      end
+
+      it "supports '_null' operator" do
+        [['_null', ''], ['', '_null']].each do |value, operator|
+          expect(build_statement(:fulltext_indexed, value, operator)).to eq(['(field_tests.field IS NULL)'])
+        end
+      end
+
+      it "supports '_not_null' operator" do
+        [['_not_null', ''], ['', '_not_null']].each do |value, operator|
+          expect(build_statement(:fulltext_indexed, value, operator)).to eq(['(field_tests.field IS NOT NULL)'])
+        end
+      end
+
+      it "supports '_empty' operator" do
+        [['_empty', ''], ['', '_empty']].each do |value, operator|
+          expect(build_statement(:fulltext_indexed, value, operator)).to eq(["(field_tests.field = '')"])
+        end
+      end
+
+      it "supports '_not_empty' operator" do
+        [['_not_empty', ''], ['', '_not_empty']].each do |value, operator|
+          expect(build_statement(:fulltext_indexed, value, operator)).to eq(["(field_tests.field != '')"])
+        end
+      end
+    end
+
     it 'supports enum type query' do
-      expect(build_statement(:enum, '1', nil)).to eq(['(field IN (?))', ['1']])
+      expect(build_statement(:enum, '1', nil)).to eq(['(field_tests.field IN (?))', ['1']])
     end
 
     describe 'with ActiveRecord native enum' do
@@ -539,7 +602,7 @@ RSpec.describe 'RailsAdmin::Adapters::ActiveRecord', active_record: true do
 
     it 'supports uuid type query' do
       uuid = SecureRandom.uuid
-      expect(build_statement(:uuid, uuid, nil)).to eq(['(field = ?)', uuid])
+      expect(build_statement(:uuid, uuid, nil)).to eq(['(field_tests.field = ?)', uuid])
     end
   end
 

@@ -113,6 +113,7 @@
         case 'string':
         case 'text':
         case 'belongs_to_association':
+        case 'fulltext_indexed':
           control = $('<select class="switch-additional-fieldsets input-sm form-control"></select>')
             .prop('value', field_operator)
             .prop('name', operator_name)
