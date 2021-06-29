@@ -18,6 +18,10 @@
     other_left = ((params[:set].to_i - 1) >= 0) && sets[params[:set].to_i - 1].present?
     other_right = sets[params[:set].to_i + 1].present?
   end
+  table_table_header_count = begin
+    count = checkboxes ? 1 : 0
+    count = count + properties.count
+  end
 
 - content_for :contextual_tabs do
   - if checkboxes
@@ -109,7 +113,9 @@
             - unless frozen_columns
               %td.last.links
                 %ul.inline.list-inline= menu_for :member, @abstract_model, object, true
-
+        - if @objects.empty?
+          %tr{class: "empty_row"}
+            %td{:colspan => table_table_header_count, :style=>"text-align: center;"} No Records found
     - if @model_config.list.limited_pagination
       .row
         .col-md-6= paginate(@objects, theme: 'ra-twitter-bootstrap/without_count', total_pages: Float::INFINITY, remote: true)
