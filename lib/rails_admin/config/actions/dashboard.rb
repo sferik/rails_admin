@@ -18,7 +18,9 @@ module RailsAdmin
 
         register_instance_option :controller do
           proc do
-            @history = @auditing_adapter && @auditing_adapter.latest(@action.auditing_versions_limit) || []
+            if @action.history?
+              @history = @auditing_adapter && @auditing_adapter.latest(@action.auditing_versions_limit) || []
+            end
             if @action.statistics?
               @abstract_models = RailsAdmin::Config.visible_models(controller: self).collect(&:abstract_model)
 
@@ -47,6 +49,10 @@ module RailsAdmin
         end
 
         register_instance_option :statistics? do
+          true
+        end
+
+        register_instance_option :history? do
           true
         end
       end
