@@ -202,7 +202,7 @@
         urls = type_select.data('urls');
         type_select.on('change', function(e) {
           var selected_data, selected_type;
-          selected_type = type_select.val().toLowerCase();
+          selected_type = type_select.val().toLowerCase().replace("::", "-");
           selected_data = $("#" + selected_type + "-js-options").data('options');
           object_select.data('options', selected_data);
           object_select.filteringSelect("destroy");

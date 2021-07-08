@@ -12,7 +12,7 @@
   js_data = type_collection.inject({}) do |options, model|
     model_name = model.second.underscore.downcase
     source_abstract_model = RailsAdmin.config(form.object.class).abstract_model
-    options.merge(model_name.gsub("_", "") => {
+    options.merge(model_name.gsub("_", "").gsub("/", "-") => {
       xhr: true,
       remote_source: index_path(model_name, source_object_id: form.object.id, source_abstract_model: source_abstract_model.to_param, current_action: current_action, compact: true),
       float_left: false
