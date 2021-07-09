@@ -8,7 +8,7 @@ RSpec.describe 'ActiveRecordEnum field', type: :request, active_record: true do
       RailsAdmin.config FieldTest do
         edit do
           field :string_enum_field do
-            default_value 'M'
+            default_value 'MEDIUM'
           end
         end
       end
@@ -18,19 +18,22 @@ RSpec.describe 'ActiveRecordEnum field', type: :request, active_record: true do
       visit new_path(model_name: 'field_test')
       is_expected.to have_selector('.enum_type select')
       is_expected.not_to have_selector('.enum_type select[multiple]')
-      expect(all('.enum_type option').map(&:text).select(&:present?)).to eq %w(S M L)
+      expect(all('.enum_type option').map(&:text).select(&:present?)).to eq %w(SMALL MEDIUM LARGE)
     end
 
     it 'shows current value as selected' do
-      visit edit_path(model_name: 'field_test', id: FieldTest.create(string_enum_field: 'L'))
+      field_test = FieldTest.create(string_enum_field: 'LARGE')
+      puts field_test.string_enum_field
+      puts field_test.attributes
+      visit edit_path(model_name: 'field_test', id: field_test)
       expect(find('.enum_type select').value).to eq 'l'
     end
 
     it 'can be updated' do
-      visit edit_path(model_name: 'field_test', id: FieldTest.create(string_enum_field: 'S'))
-      select 'L'
+      visit edit_path(model_name: 'field_test', id: FieldTest.create(string_enum_field: 'SMALL'))
+      select 'LARGE'
       click_button 'Save'
-      expect(FieldTest.first.string_enum_field).to eq 'L'
+      expect(FieldTest.first.string_enum_field).to eq 'LARGE'
     end
 
     it 'pre-populates default value' do

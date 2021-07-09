@@ -19,6 +19,16 @@ module RailsAdmin
             bindings[:object].class.respond_to?(enum_method) ? bindings[:object].class.send(enum_method) : bindings[:object].send(enum_method)
           end
 
+          register_instance_option :formatted_value do
+            if enum.is_a?(::Hash)
+              enum[value]
+            elsif enum.is_a?(::Array) && enum.first.is_a?(::Array)
+              enum.detect { |e| e[0].to_s == value.to_s }[1].to_s.presence || value.presence || ' - '
+            else
+              value.presence || ' - '
+            end
+          end
+
           register_instance_option :pretty_value do
             if enum.is_a?(::Hash)
               enum.reject { |_k, v| v.to_s != value.to_s }.keys.first.to_s.presence || value.presence || ' - '
