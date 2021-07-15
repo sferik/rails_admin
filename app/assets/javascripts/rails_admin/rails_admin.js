@@ -1,6 +1,6 @@
-//=  require jquery3
+//=  require 'jquery3'
 //=  require 'rails_admin/jquery.migrate'
-//=  require jquery_ujs
+//=  require 'jquery_ujs'
 //=  require 'jquery.remotipart'
 //=  require 'rails_admin/jquery-ui'
 //=  require 'rails_admin/moment-with-locales'
