@@ -8,8 +8,8 @@ module RailsAdmin
           require 'rails_admin/extensions/history/history'
         end
 
-        def latest(count = 100)
-          ::RailsAdmin::History.latest(count)
+        def latest(count = 100, order = {id: :desc})
+          ::RailsAdmin::History.latest(count, order)
         end
 
         def delete_object(object, model, user)

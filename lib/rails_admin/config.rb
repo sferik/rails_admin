@@ -44,6 +44,9 @@ module RailsAdmin
       # Default association limit
       attr_accessor :default_associated_collection_limit
 
+      # Default order for history versions model in dashboard
+      attr_accessor :default_versions_order
+
       attr_reader :default_search_operator
 
       # Configuration option to specify which method names will be searched for
@@ -290,6 +293,7 @@ module RailsAdmin
         @navigation_static_links = {}
         @navigation_static_label = nil
         @parent_controller = '::ActionController::Base'
+        @default_versions_order = {id: :desc}
         @forgery_protection_settings = {with: :exception}
         RailsAdmin::Config::Actions.reset
       end

@@ -11,8 +11,8 @@ module RailsAdmin
     default_scope { order('id DESC') }
 
     class << self
-      def latest(count = 100)
-        limit(count)
+      def latest(count = 100, order = {id: :desc})
+        order(order).limit(count)
       end
 
       def create_history_item(message, object, abstract_model, user)
