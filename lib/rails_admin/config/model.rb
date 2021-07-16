@@ -98,6 +98,10 @@ module RailsAdmin
         nil
       end
 
+      register_instance_option :dashboard_sort_by do
+        nil
+      end
+
       # Act as a proxy for the base section configuration that actually
       # store the configurations.
       def method_missing(method_name, *args, &block)
